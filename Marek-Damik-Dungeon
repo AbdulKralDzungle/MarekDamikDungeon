@@ -1,0 +1,69 @@
+Marek Damik Dungeon
+
+---------//----------
+Rozdělení práce ve dvojici
+Damik - 
+Server con, Command pattern, Struktura tříd
+Marek - 
+Design, Emnemes, dokumenty, itemi
+---------//----------
+
+Návrh architektury
+------------------
+      klient
+------------------
+      ||  /\     ---------------------------------------------
+      \/  ||    \/                                           |
+------------------      ------------------          ------------------
+      server         ->       GameLoop        ->     OutputStringMaker
+------------------      ------------------          ------------------
+                                || /\
+                                \/ ||
+                        ------------------             
+                              Command
+                        ------------------
+                                || /\
+                                \/ ||
+                        ------------------
+                                Rooms            [room] [item] [eneme] [players]
+                        ------------------                                  |
+                                                                            \/
+                                                                        Backpack 
+
+Popis komunikace mezi klientem a serverem
+
+---------//----------
+[Command] - [Argument]
+Example: attack - Marek
+jak [Command] tak [Argument] budou protaženy .ToLower()
+
+Příkazi: 
+Walk
+Attack
+Grab
+Exit
+Help
+Interact
+Shout
+
+Náčrt herního světa
+
+---------//----------
+A magic ring
+given to en Marek
+who must destroy all evil 
+on a magic quest...
+And what hapens next?
+he walks walks walks
+walks walks walks walks 
+walks walks walks walks... 
+---------//----------
+
+Volba herních mechanik
+
+---------//----------
+Komunikace mezi hráči
+Souboj s npc
+Souboj s hráči
+Používání předmětů
+Obchodování
