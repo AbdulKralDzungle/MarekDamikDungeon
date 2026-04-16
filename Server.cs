@@ -6,6 +6,7 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using MarekDamikDungeon;
 
 namespace TcpServer2
 {
@@ -44,18 +45,20 @@ namespace TcpServer2
             writer.Flush();
             bool clientConnect = true;
             string data = null;
+            string[] args = null;
             string dataRecive = null;
+            GameLoop gameLoop = new GameLoop();
             while (clientConnect)
             {
                 data = reader.ReadLine();
                 data = data.ToLower();
-                //nejak data zpracuji
-
-                dataRecive = data;
-                writer.WriteLine(dataRecive);
+                args = data.Split(' ');
+                clientConnect = !gameLoop.CommandFromClient(args);
+                writer.WriteLine(gameLoop.Result);
                 writer.Flush();
             }
-
+            writer.Flush();
+            client.Close();
         }
     }
 }
