@@ -1,7 +1,10 @@
 using System.Windows.Input;
 
 namespace MarekDamikDungeon.Interfaces.Commands;
-
+    /**
+     * Exit is command used in GameLoop as a part of command design pattern
+     * It writes a helping text to player, acts like guide
+     */
 public class Help : IGameCommand
 {
     public bool Execute()

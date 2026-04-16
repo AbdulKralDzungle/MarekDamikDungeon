@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarekDamikDungeon
 {
+    /**
+     * handles all player stats
+     */
     internal class Player
     {
         private int _health;

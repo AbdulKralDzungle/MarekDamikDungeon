@@ -8,6 +8,10 @@ using System.Xml.Serialization;
 
 namespace MarekDamikDungeon
 {
+    /**
+     * contains all information about the game world in form of room list
+     * handles movement of players
+     */
     internal class Map
     {
         private List<Room> rooms;

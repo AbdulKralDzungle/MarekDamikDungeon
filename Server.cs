@@ -23,6 +23,9 @@ namespace TcpServer2
             ServerLoop();
         }
 
+        /**
+         * method that waits until client connects, then makes passes the connection to ClientLoop()
+         */
         private void ServerLoop()
         {
             Console.WriteLine("Server byl spusten");
@@ -34,7 +37,12 @@ namespace TcpServer2
             }
 
         }
-
+        
+        /**
+         * this method contains loop that keeps individual client connected
+         * it reads data from client passes them to command design pattern in the GameLoop and then sends respond to player
+         * @param obj is client object containing tcp connection
+         */
         private void ClientLoop(object obj)
         {
             TcpClient client = (TcpClient)obj;
@@ -47,14 +55,14 @@ namespace TcpServer2
             string data = null;
             string[] args = null;
             string dataRecive = null;
-            GameLoop gameLoop = new GameLoop();
+            GameExec gameExec = new GameExec();
             while (clientConnect)
             {
                 data = reader.ReadLine();
                 data = data.ToLower();
                 args = data.Split(' ');
-                clientConnect = !gameLoop.CommandFromClient(args);
-                writer.WriteLine(gameLoop.Result);
+                clientConnect = !gameExec.CommandFromClient(args);
+                writer.WriteLine(gameExec.Result);
                 writer.Flush();
             }
             writer.Flush();

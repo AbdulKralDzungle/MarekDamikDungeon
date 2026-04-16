@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarekDamikDungeon.Interfaces
 {
+    /**
+     * interface witch should be implemented by all enemies
+     */
     internal class IEneme
     {
     }

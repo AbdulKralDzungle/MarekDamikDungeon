@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace MarekDamikDungeon
 {
+    /**
+     * writes server logs to a file
+     */
     internal class Logger
     {
         public void Log(string message)

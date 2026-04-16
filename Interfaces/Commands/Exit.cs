@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace MarekDamikDungeon.Interfaces.Commands
 {
+    /**
+     * Exit is command used in GameLoop as a part of command design pattern
+     * its purpose is to be a way for player to exit the game
+     */
     internal class Exit : IGameCommand
     {
         public bool Execute()
