@@ -9,7 +9,19 @@ namespace MarekDamikDungeon.Interfaces
     /**
      * interface witch should be implemented by all enemies
      */
-    internal class IEneme
+    internal interface IEneme
     {
+        public string Name { get; set; }
+        public string Description { get; set; }
+        public int Hp { get; set; }
+        public int MaxHp { get; set; }
+
+        //how much damage the enemy deals to a player
+        public int Damage { get; set; }
+
+        public void GetDamaged(int dmg);
+
+
+
     }
 }
