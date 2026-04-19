@@ -18,6 +18,7 @@ namespace MarekDamikDungeon
         private bool _alive;
 
         private List<IItem> _inv;
+        private int _invMax;
 
         public string Name{ get => _name; set => _name = value; }
 
@@ -44,6 +45,40 @@ namespace MarekDamikDungeon
             {
                 return "You have died.";
             }
+        }
+
+        public bool AddItem(IItem item)
+        {
+            if(item == null) return false;
+            if(Inv.Count < _invMax)
+            {
+                Inv.Add(item);
+                return true;
+            }
+            return false;
+        }
+
+        public string GetDescOfItem(string name)
+        {
+            foreach (var item in Inv)
+            {
+                if (name.Equals(item.Name))
+                {
+                    return item.Description;
+                }
+            }
+
+            return "Item not found";
+        }
+
+        public string InvToString()
+        {
+            string text = $"Inventory ({Inv.Count}/{_invMax}):\n";
+            foreach(IItem item in Inv)
+            {
+                text += $"[{item.Name}] ";
+            }
+            return text;
         }
 
 

@@ -13,5 +13,7 @@ namespace MarekDamikDungeon.Interfaces
     {
         public string Name { get; set; }
         public string Description { get; set; }
+        public int NumberOfUses { get; set; }
+        public void Effect();
     }
 }
