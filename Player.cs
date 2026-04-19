@@ -71,6 +71,24 @@ namespace MarekDamikDungeon
             return "Item not found";
         }
 
+        public string UseItem(string name)
+        {
+            foreach (var item in Inv)
+            {
+                if (name.Equals(item.Name))
+                {
+                    item.NumberOfUses--;
+                    string use = item.Effect();
+                    if(item.NumberOfUses <= 0)
+                    {
+                        Inv.Remove(item);
+                    }
+                    return use;
+                }
+            }
+            return "Item not found";
+        }
+
         public string InvToString()
         {
             string text = $"Inventory ({Inv.Count}/{_invMax}):\n";
