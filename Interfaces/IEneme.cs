@@ -16,10 +16,19 @@ namespace MarekDamikDungeon.Interfaces
         public int Hp { get; set; }
         public int MaxHp { get; set; }
 
-        //how much damage the enemy deals to a player
+        /**
+         * how much damage the enemy deals to a player
+         */
         public int Damage { get; set; }
 
-        public void GetDamaged(int dmg);
+        public string GetDamaged(int dmg);
+
+        public bool DamagePlayer(Player player);
+
+        /**
+         * For enemy loading from files - to be written
+         */
+        public void LoadEnemy();
 
 
 

@@ -31,7 +31,7 @@ namespace MarekDamikDungeon
             Inv = new List<IItem>();
         } 
 
-        public string Damaged(int dmg)
+        public string GetDamaged(int dmg)
         {
             Health -= dmg;
             Alive = Health > 0;
