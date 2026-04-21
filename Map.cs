@@ -27,6 +27,12 @@ namespace MarekDamikDungeon
             rooms.Add(new Room(xmlData, 0));    // zatim přidání pouze placeholder místnosti
             return true;
         }
+
+        public Player getPlayerByName(string name)
+        {
+            return null;
+        }
+        
         public bool movePlayer()
         {
             return false;

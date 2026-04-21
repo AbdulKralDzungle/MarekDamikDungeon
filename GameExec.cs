@@ -16,21 +16,27 @@ namespace MarekDamikDungeon
     internal class GameExec
     {
         private Dictionary<string, IGameCommand> commands;
+        private Map map;
         public string Result { get; set; }
 
         public GameExec()
         {
-            Initialize();
+            InitializeCommand();
         }
         
         /**
          * here are initialized all commands for the command design pattern
          */
-        private void Initialize()
+        private void InitializeCommand()
         {
             commands = new Dictionary<string, IGameCommand>();
             commands.Add("exit", new Exit());
             commands.Add("help", new Help());
+        }
+
+        private void InitializeMap()
+        {
+            map = new Map();
         }
         
         /**
@@ -42,7 +48,7 @@ namespace MarekDamikDungeon
         {
             if (commands.ContainsKey(args[0]))
             {
-                commands[args[0]].Execute();
+                commands[args[0]].Execute(args[1], map);
                 Result = commands[args[0]].Info();
                 return commands[args[0]].Exit();
             }

@@ -1,4 +1,9 @@
-using System.Windows.Input;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
 
 namespace MarekDamikDungeon.Interfaces.Commands;
     /**
@@ -7,7 +12,7 @@ namespace MarekDamikDungeon.Interfaces.Commands;
      */
 public class Help : IGameCommand
 {
-    public bool Execute()
+    bool IGameCommand.Execute(string arg, Map map)
     {
         return true;
     }
