@@ -18,7 +18,7 @@ namespace MarekDamikDungeon
     {
         private int id;
         private List<IItem> items;
-        private List<IEneme> enemes;
+        private List<IEnemy> enemes;
         
         public Room(string xml, int id) 
         {

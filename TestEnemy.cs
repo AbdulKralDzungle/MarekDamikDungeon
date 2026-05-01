@@ -8,7 +8,7 @@ using MarekDamikDungeon.Interfaces;
 
 namespace MarekDamikDungeon
 {
-    internal class TestEnemy : IEneme
+    internal class TestEnemy : IEnemy
     {
         /**
          * Field values etc. will be most likely loaded from files

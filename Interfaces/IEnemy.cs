@@ -9,7 +9,7 @@ namespace MarekDamikDungeon.Interfaces
     /**
      * interface witch should be implemented by all enemies
      */
-    internal interface IEneme
+    internal interface IEnemy
     {
         public string Name { get; set; }
         public string Description { get; set; }
