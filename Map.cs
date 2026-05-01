@@ -16,7 +16,11 @@ namespace MarekDamikDungeon
     {
         private List<Room> rooms;
         private Dictionary<int, List<Player>> players;
-        public Map() { }
+
+        public Map()
+        {
+            Initialize("idk tady budou takový ty <> věci");
+        }
 
         private bool Initialize(string xmlData)
         {
