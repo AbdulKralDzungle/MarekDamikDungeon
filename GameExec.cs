@@ -33,6 +33,7 @@ namespace MarekDamikDungeon
             commands.Add("exit", new Exit());
             commands.Add("help", new Help());
             commands.Add("err", new Err());
+            commands.Add("attack", new Attack());
         }
 
         private void InitializeMap()
