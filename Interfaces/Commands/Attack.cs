@@ -10,6 +10,11 @@ internal class Attack : IGameCommand
         return true;
     }
 
+    public bool Execute(Map map)
+    {
+        throw new NotImplementedException();
+    }
+
     public string Info()
     {
         return $"you delt {dmg}";

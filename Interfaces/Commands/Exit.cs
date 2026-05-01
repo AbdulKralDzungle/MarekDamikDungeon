@@ -17,6 +17,11 @@ namespace MarekDamikDungeon.Interfaces.Commands
             return true;
         }
 
+        public bool Execute(Map map)
+        {
+            return true;
+        }
+
         public string Info()
         {
             return "You exited the game";

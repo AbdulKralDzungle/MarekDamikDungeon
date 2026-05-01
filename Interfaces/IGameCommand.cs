@@ -13,6 +13,7 @@ namespace MarekDamikDungeon.Interfaces
     internal interface IGameCommand
     {
         public bool Execute(string arg, Map map);
+        public bool Execute(Map map);
         public bool Exit();
         public string Info();
         public string Log(Player player);
