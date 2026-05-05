@@ -9,7 +9,7 @@ namespace MarekDamikDungeon.Interfaces
     /**
      * interface witch should be implemented by all items
      */
-    internal interface IItem
+    public interface IItem
     {
         public string Name { get; set; }
         public string Description { get; set; }

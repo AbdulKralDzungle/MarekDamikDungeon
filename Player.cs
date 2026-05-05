@@ -10,7 +10,7 @@ namespace MarekDamikDungeon
     /**
      * handles all player stats
      */
-    internal class Player
+    public class Player
     {
         private int _health;
         private int _maxHealth;

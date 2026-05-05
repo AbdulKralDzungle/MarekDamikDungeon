@@ -55,7 +55,7 @@ namespace MarekDamikDungeon
             Result = "Something went wrong";
             if (args.Length > 1) commands[args[0]].Execute(args[1], map);
             commands[args[0]].Execute(map);
-            Result = konzole.Vypis($"{commands[args[0]].Info()}");
+            Result = konzole.Vypis($"{commands[args[0]].Info()}", map);
             return commands[args[0]].Exit();
         }
     }

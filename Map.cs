@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using MarekDamikDungeon.Interfaces;
 
 namespace MarekDamikDungeon
 {
@@ -12,7 +13,7 @@ namespace MarekDamikDungeon
      * contains all information about the game world in form of room list
      * handles movement of players
      */
-    internal class Map
+    public class Map
     {
         private List<Room> rooms;
         private Dictionary<int, List<Player>> players;
@@ -32,18 +33,33 @@ namespace MarekDamikDungeon
             return true;
         }
 
-        public Player getPlayerByName(string name)
+        public Player GetPlayerByName(string name)
         {
             return null;
         }
         
-        public bool movePlayer()
+        public bool MovePlayer()
         {
             return false;
         }
-        public void updatePlayerPositions()
+        public void UpdatePlayerPositions()
         {
             return;
+        }
+
+        public string EnemeNames(int room)
+        {
+            string output = "";
+            foreach (IEnemy e in rooms[room].Enemies())
+            {
+                output += $"{e.Name} ";
+            }
+            return output;
+        }
+
+        public bool ContainEneme()
+        {
+            return false;
         }
 
     }

@@ -24,5 +24,10 @@ namespace MarekDamikDungeon
         {
             this.id = id;
         }
+
+        public List<IEnemy> Enemies()
+        {
+            return enemes;
+        }
     }
 }
