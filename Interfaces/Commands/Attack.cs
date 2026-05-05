@@ -7,6 +7,7 @@ internal class Attack : IGameCommand
     private int dmg;
     public bool Execute(string arg, Map map)
     {
+        
         return true;
     }
 

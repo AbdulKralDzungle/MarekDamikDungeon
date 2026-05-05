@@ -7,17 +7,17 @@ public class ExampleEnemy : IEnemy
     public int Hp { get; set; }
     public int MaxHp { get; set; }
     public int Damage { get; set; }
-    public string GetDamaged(int dmg)
+    public bool ChangeHelth(int dmg)
     {
         throw new NotImplementedException();
     }
 
-    bool IEnemy.DamagePlayer(Player player)
+    public bool IsAttacking()
     {
         throw new NotImplementedException();
     }
 
-    public void LoadEnemy()
+    public void LoadEnemy(string data)
     {
         throw new NotImplementedException();
     }

@@ -17,6 +17,7 @@ namespace MarekDamikDungeon
     {
         private Dictionary<string, IGameCommand> commands;
         private Map map;
+        private Konzole konzole;
         public string Result { get; set; }
 
         public GameExec()
@@ -29,6 +30,7 @@ namespace MarekDamikDungeon
          */
         private void InitializeCommand()
         {
+            konzole = new  Konzole();
             commands = new Dictionary<string, IGameCommand>();
             commands.Add("exit", new Exit());
             commands.Add("help", new Help());
@@ -53,7 +55,7 @@ namespace MarekDamikDungeon
             Result = "Something went wrong";
             if (args.Length > 1) commands[args[0]].Execute(args[1], map);
             commands[args[0]].Execute(map);
-            Result = $"------//{commands[args[0]].Info()}//------";
+            Result = konzole.Vypis($"{commands[args[0]].Info()}");
             return commands[args[0]].Exit();
         }
     }

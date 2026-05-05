@@ -21,14 +21,14 @@ namespace MarekDamikDungeon.Interfaces
          */
         public int Damage { get; set; }
 
-        public string GetDamaged(int dmg);
+        public bool ChangeHelth(int dmg);
 
-        public bool DamagePlayer(Player player);
-
+        public bool IsAttacking();
+        
         /**
          * For enemy loading from files - to be written
          */
-        public void LoadEnemy();
+        public void LoadEnemy(string data);
 
 
 
