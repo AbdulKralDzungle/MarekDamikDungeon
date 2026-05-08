@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Sockets;
+﻿using System.Net.Sockets;
 using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using MarekDamikDungeon;
 
 namespace TcpServer2
@@ -14,9 +8,11 @@ namespace TcpServer2
     {
         private TcpListener myServer;
         private bool isRunning;
+        private GameExec gameExec;
 
         public Server(int port)
         {
+            gameExec = new GameExec();
             myServer = new TcpListener(System.Net.IPAddress.Any, port);
             myServer.Start();
             isRunning = true;
@@ -48,25 +44,7 @@ namespace TcpServer2
             TcpClient client = (TcpClient)obj;
             StreamReader reader = new StreamReader(client.GetStream(), Encoding.UTF8);
             StreamWriter writer = new StreamWriter(client.GetStream(), Encoding.UTF8);
-
-            writer.WriteLine("Byl jsi pripojen");
-            writer.Flush();
-            bool clientConnect = true;
-            string data = null;
-            string[] args = null;
-            string dataRecive = null;
-            GameExec gameExec = new GameExec();
-            while (clientConnect)
-            {
-                data = reader.ReadLine();
-                data = data.ToLower();
-                args = data.Split(' ');
-                clientConnect = !gameExec.CommandFromClient(args);
-                writer.WriteLine(gameExec.Result);
-                writer.Flush();
-            }
-            writer.Flush();
-            client.Close();
+            Client player = new Client(gameExec.Mapa.AddPlayer(), client, reader, writer, gameExec);
         }
     }
 }

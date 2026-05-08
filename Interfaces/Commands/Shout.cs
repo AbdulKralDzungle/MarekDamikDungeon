@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 
 namespace MarekDamikDungeon.Interfaces.Commands;
-    /**
-     * Exit is command used in GameLoop as a part of command design pattern
-     * It writes a helping text to player, acts like guide
-     */
-public class Help : IGameCommand
+
+public class Shout : IGameCommand
 {
     bool IGameCommand.Execute(string arg, Map map,  Client client)
     {
+        client.Brodcast(arg);
         return true;
     }
 
@@ -29,11 +27,11 @@ public class Help : IGameCommand
 
     public string Info()
     {
-        return "Help: Walk Attack Grab Exit Help Interact Shout"; // will have to change the help text
+        return "you shouted..."; 
     }
 
     string IGameCommand.Log(Player player)
     {
-        return $"Player {player.Name} listed Help";
+        return $"player {player.Name} shouted";
     }
 }

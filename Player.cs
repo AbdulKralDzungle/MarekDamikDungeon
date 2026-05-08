@@ -10,16 +10,19 @@ namespace MarekDamikDungeon
     /**
      * handles all player stats
      */
-    internal class Player
+    public class Player
     {
         private int _health;
         private int _maxHealth;
+        // private _defense;
+        private int _roomId;
         private string _name;
         private bool _alive;
 
         private List<IItem> _inv;
         private int _invMax;
 
+        public int RoomId{ get => _roomId; set => _roomId = value; }
         public string Name{ get => _name; set => _name = value; }
 
         public int Health{ get => _health; set => _health = value; }
@@ -30,6 +33,8 @@ namespace MarekDamikDungeon
         public Player()
         {
             Inv = new List<IItem>();
+            Random rn = new Random();
+            _name = "" + rn.Next(500);
         } 
 
         public string GetDamaged(int dmg)

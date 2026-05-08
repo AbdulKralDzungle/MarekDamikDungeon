@@ -13,46 +13,40 @@ namespace MarekDamikDungeon
      * this class contains core command design pattern
      * it handles all commands from player and
      */
-    internal class GameExec
+    public class GameExec
     {
-        private Dictionary<string, IGameCommand> commands;
-        private Map map;
-        public string Result { get; set; }
+        private List<Client> clients;
+        public Map Mapa { get; private set; }
 
         public GameExec()
         {
-            InitializeCommand();
+            InitializeMap();
+            Initialize();
         }
-        
-        /**
-         * here are initialized all commands for the command design pattern
-         */
-        private void InitializeCommand()
+
+        private void Initialize()
         {
-            commands = new Dictionary<string, IGameCommand>();
-            commands.Add("exit", new Exit());
-            commands.Add("help", new Help());
+            clients = new List<Client>();
         }
 
         private void InitializeMap()
         {
-            map = new Map();
+            Mapa = new Map();
         }
-        
-        /**
-         * this method handles input from player
-         * @param args is pole where [0] is command and all other values are arguments for the given command
-         * @return bool true if method ended program false otherwise
-         */
-        public bool CommandFromClient(string[] args)
+
+        public void Brodcast(string message)
         {
-            if (commands.ContainsKey(args[0]))
+            Console.WriteLine("lamo" + clients.Count);
+            foreach (Client c in clients)
             {
-                commands[args[0]].Execute(args[1], map);
-                Result = commands[args[0]].Info();
-                return commands[args[0]].Exit();
+                c.SendMessage(message);
+                Console.WriteLine(c.Id);
             }
-            return false;
+        }
+
+        public void AddClient(Client client)
+        {
+            clients.Add(client);
         }
     }
 }

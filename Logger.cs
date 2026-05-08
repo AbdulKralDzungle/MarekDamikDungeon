@@ -13,7 +13,13 @@ namespace MarekDamikDungeon
     {
         public void Log(string message)
         {
+            Console.WriteLine(message);
+            ToCSV(message);
+        }
 
+        private void ToCSV(string message)
+        {
+            
         }
     }
 }

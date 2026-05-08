@@ -10,9 +10,9 @@ namespace MarekDamikDungeon.Interfaces.Commands;
      * Exit is command used in GameLoop as a part of command design pattern
      * It writes a helping text to player, acts like guide
      */
-public class Help : IGameCommand
+public class Err : IGameCommand
 {
-    bool IGameCommand.Execute(string arg, Map map,  Client client)
+    bool IGameCommand.Execute(string arg, Map map, Client client)
     {
         return true;
     }
@@ -29,11 +29,11 @@ public class Help : IGameCommand
 
     public string Info()
     {
-        return "Help: Walk Attack Grab Exit Help Interact Shout"; // will have to change the help text
+        return "Syntax error, your command is not valid, try again"; 
     }
 
     string IGameCommand.Log(Player player)
     {
-        return $"Player {player.Name} listed Help";
+        return $"Player {player.Name} tried wrong command";
     }
 }

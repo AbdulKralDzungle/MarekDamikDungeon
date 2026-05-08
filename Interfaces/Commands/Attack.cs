@@ -5,9 +5,14 @@ namespace MarekDamikDungeon.Interfaces.Commands;
 internal class Attack : IGameCommand
 {
     private int dmg;
-    public bool Execute(string arg, Map map)
+    public bool Execute(string arg, Map map, Client client)
     {
-        return true;
+        return map.zautocNa(client.Id, arg);
+    }
+
+    public bool Execute(Map map)
+    {
+        return false;
     }
 
     public string Info()
@@ -22,6 +27,6 @@ internal class Attack : IGameCommand
 
     bool IGameCommand.Exit()
     {
-        return true;
+        return false;
     }
 }

@@ -12,7 +12,12 @@ namespace MarekDamikDungeon.Interfaces.Commands
      */
     internal class Exit : IGameCommand
     {
-        public bool Execute(string arg, Map map)
+        public bool Execute(string arg, Map map, Client client)
+        {
+            return true;
+        }
+
+        public bool Execute(Map map)
         {
             return true;
         }

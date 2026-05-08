@@ -9,7 +9,7 @@ namespace MarekDamikDungeon.Interfaces
     /**
      * interface witch should be implemented by all enemies
      */
-    internal interface IEneme
+    internal interface IEnemy
     {
         public string Name { get; set; }
         public string Description { get; set; }
@@ -21,14 +21,14 @@ namespace MarekDamikDungeon.Interfaces
          */
         public int Damage { get; set; }
 
-        public string GetDamaged(int dmg);
+        public bool ChangeHelth(int dmg);
 
-        public bool DamagePlayer(Player player);
-
+        public bool IsAttacking();
+        
         /**
          * For enemy loading from files - to be written
          */
-        public void LoadEnemy();
+        public void LoadEnemy(string data);
 
 
 
