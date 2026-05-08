@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using MarekDamikDungeon.Interfaces;
+using MarekDamikDungeon.Interfaces.Items;
 
 namespace MarekDamikDungeon
 {
@@ -24,9 +25,11 @@ namespace MarekDamikDungeon
         public Map()
         {
             hracCount = 0;
-            Initialize("idk tady budou takový ty <> věci");
+            Initialize("Nacti to tady z CSVcka");
         }
 
+        // potrebujeme vytahnout jednotlivy mistnosti z souboru
+        // mistnosti budou fungovat tak ze budes mit mistnost, ta bude mit svoje id, a idecka mistnosti do kterejch se pude z ni dostat
         private bool Initialize(string xmlData)
         {
             rooms = new List<Room>();
@@ -39,6 +42,7 @@ namespace MarekDamikDungeon
         {
             //idhrace je id utocnika
             //name je jmeno na koho se utoci
+            ContainsPlayer(players[idHrace].RoomId, name);
             
             return false;
         }
@@ -54,7 +58,13 @@ namespace MarekDamikDungeon
             // tam kde je vic veci dej 1 string kde je "1. item jedna \n 2. item dva" ...
             return new string[] {"5", "1. item jedna", "idk", "idk", "1. item idk", "1. ban dlazek", "1. pavel"};
         }
-        
+
+        public IItem ExtractItem(string name, int room)
+        {
+            // tady potrebuju vratit item podle id mistnosti a jmena
+            // pokud mistnost item s danym jmenem neobsahuje vrat null
+            return new ExampleItem();
+        }
         public Player GetPlayerByName(string name)
         {
             return null;
@@ -85,6 +95,11 @@ namespace MarekDamikDungeon
             players.Add(hracCount, new Player());
             hracCount++;
             return hracCount - 1;
+        }
+
+        public Player GetPlayer(int id)
+        {
+            return players[id];
         }
 
     }
