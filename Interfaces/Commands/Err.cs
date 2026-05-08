@@ -12,7 +12,7 @@ namespace MarekDamikDungeon.Interfaces.Commands;
      */
 public class Err : IGameCommand
 {
-    bool IGameCommand.Execute(string arg, Map map)
+    bool IGameCommand.Execute(string arg, Map map, Client client)
     {
         return true;
     }

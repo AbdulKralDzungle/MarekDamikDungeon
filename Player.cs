@@ -14,6 +14,8 @@ namespace MarekDamikDungeon
     {
         private int _health;
         private int _maxHealth;
+        // private _defense;
+        // private _room id;
         private string _name;
         private bool _alive;
 

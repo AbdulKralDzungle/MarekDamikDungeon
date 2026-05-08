@@ -16,35 +16,36 @@ namespace MarekDamikDungeon
     public class Map
     {
         private List<Room> rooms;
-        private Dictionary<int, List<Player>> players;
+        private Dictionary<int, Player> players;
+        private int hracCount;
+        
+        
 
         public Map()
         {
+            hracCount = 0;
             Initialize("idk tady budou takový ty <> věci");
         }
 
         private bool Initialize(string xmlData)
         {
             rooms = new List<Room>();
-            players = new Dictionary<int, List<Player>>();
-            players.Add(0, new List<Player>()); // testovaci hrac zatim
-            players[0].Add(new Player());
+            players = new Dictionary<int, Player>();
             rooms.Add(new Room(xmlData, 0));    // zatim přidání pouze placeholder místnosti
             return true;
         }
 
+        public bool zautocNa(int idHrace, string name) // bool povedlo se - projde hrace a prisery, pokud utocnik lepsi staty, ubere prisere, jenak ubere utocnikovy
+        {
+            //idhrace je id utocnika
+            //name je jmeno na koho se utoci
+            
+            return false;
+        }
+        
         public Player GetPlayerByName(string name)
         {
             return null;
-        }
-        
-        public bool MovePlayer()
-        {
-            return false;
-        }
-        public void UpdatePlayerPositions()
-        {
-            return;
         }
 
         public string EnemeNames(int room)
@@ -57,9 +58,21 @@ namespace MarekDamikDungeon
             return output;
         }
 
+        public Player ContainsPlayer(int room,  string name)
+        {
+            return null;
+        }
+        
         public bool ContainEneme()
         {
             return false;
+        }
+
+        public int AddPlayer()
+        {
+            players.Add(hracCount, new Player());
+            hracCount++;
+            return hracCount - 1;
         }
 
     }
