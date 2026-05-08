@@ -27,6 +27,6 @@ internal class Attack : IGameCommand
 
     bool IGameCommand.Exit()
     {
-        return true;
+        return false;
     }
 }

@@ -42,6 +42,18 @@ namespace MarekDamikDungeon
             
             return false;
         }
+
+        /**
+         * tohle se bude pouzivat aby to informovalo hrace co se prave ve hre deje
+         * takze to bude vracet nejen stav hrace samotneho, ale i mistnosti ve ktere je
+         */
+        public string[] PlayerStatus(int idHrace)
+        {
+            // marku tady pls potrebujeme [] stringu, ktery bude obsahovat
+            // [zivoty hrace, inventar hrace, nazev mistnosti, popis mistnosti, predmnety v mistnosti, protivnici v mistnosti, hraci v mistnosti]
+            // tam kde je vic veci dej 1 string kde je "1. item jedna \n 2. item dva" ...
+            return new string[] {"5", "1. item jedna", "idk", "idk", "1. item idk", "1. ban dlazek", "1. pavel"};
+        }
         
         public Player GetPlayerByName(string name)
         {

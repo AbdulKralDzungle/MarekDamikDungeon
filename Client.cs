@@ -40,7 +40,7 @@ public class Client
         Result = "Something went wrong";
         if (args.Length > 1) commands[args[0]].Execute(args[1], map, this);
         commands[args[0]].Execute(map);
-        Result = konzole.Vypis($"{commands[args[0]].Info()}", map);
+        Result = konzole.Vypis($"{commands[args[0]].Info()}", map, Id);
         return commands[args[0]].Exit();
     }
 }
