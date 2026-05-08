@@ -33,6 +33,8 @@ namespace MarekDamikDungeon
         public Player()
         {
             Inv = new List<IItem>();
+            Random rn = new Random();
+            _name = "" + rn.Next(500);
         } 
 
         public string GetDamaged(int dmg)

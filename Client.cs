@@ -1,3 +1,5 @@
+using System.Net.Sockets;
+using System.Text;
 using MarekDamikDungeon.Interfaces;
 using MarekDamikDungeon.Interfaces.Commands;
 
@@ -9,11 +11,22 @@ public class Client
     private Konzole konzole;
     public int Id { get; set; }
     public string Result { get; set; }
-    
-    public Client(int id)
+    private TcpClient client;
+    private StreamReader reader;
+    private StreamWriter writer;
+    private GameExec gameExec;
+    private Logger log = new Logger();
+    public Client(int id, TcpClient client, StreamReader reader, StreamWriter writer, GameExec gameExec)
     {
+        this.client = client;
+        this.gameExec = gameExec;
+        this.gameExec.AddClient(this);
+        this.reader = reader;
+        this.writer = writer;
+        log = new Logger();
         this.Id = id;
         InitializeCommand();
+        ExecteLoop();
     }
         
     /**
@@ -24,9 +37,11 @@ public class Client
         konzole = new  Konzole();
         commands = new Dictionary<string, IGameCommand>();
         commands.Add("exit", new Exit());
+        commands.Add("pick", new Pick());
         commands.Add("help", new Help());
         commands.Add("err", new Err());
         commands.Add("attack", new Attack());
+        commands.Add("shout", new Shout());
     }
     /**
      * this method handles input from player
@@ -41,6 +56,40 @@ public class Client
         if (args.Length > 1) commands[args[0]].Execute(args[1], map, this);
         commands[args[0]].Execute(map);
         Result = konzole.Vypis($"{commands[args[0]].Info()}", map, Id);
+        log.Log(commands[args[0]].Log(gameExec.Mapa.GetPlayer(Id)));
         return commands[args[0]].Exit();
     }
+
+    public void ExecteLoop()
+    {
+        writer.WriteLine("Byl jsi pripojen");
+        writer.Flush();
+        bool clientConnect = true;
+        string data = null;
+        string[] args = null;
+        string dataRecive = null;
+        while (clientConnect)
+        {
+            data = reader.ReadLine();
+            data = data.ToLower();
+            args = data.Split(' ');
+            clientConnect = !CommandFromClient(args, gameExec.Mapa);
+            SendMessage(Result);
+        }
+        writer.Flush();
+        client.Close();
+    }
+
+    public void SendMessage(string message)
+    {
+        writer.WriteLine(message);
+        writer.Flush();
+        Console.WriteLine("sent");
+    }
+    public void Brodcast(string message)
+    {
+        gameExec.Brodcast(message);
+        Console.WriteLine("brodcasted");
+    }
+
 }

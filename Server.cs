@@ -44,26 +44,7 @@ namespace TcpServer2
             TcpClient client = (TcpClient)obj;
             StreamReader reader = new StreamReader(client.GetStream(), Encoding.UTF8);
             StreamWriter writer = new StreamWriter(client.GetStream(), Encoding.UTF8);
-
-            writer.WriteLine("Byl jsi pripojen");
-            writer.Flush();
-            bool clientConnect = true;
-            string data = null;
-            string[] args = null;
-            string dataRecive = null;
-            Client player = new Client(gameExec.Mapa.AddPlayer());
-            while (clientConnect)
-            {
-                data = reader.ReadLine();
-                data = data.ToLower();
-                args = data.Split(' ');
-                Console.WriteLine(gameExec.Mapa);
-                clientConnect = !player.CommandFromClient(args, gameExec.Mapa);
-                writer.WriteLine(player.Result);
-                writer.Flush();
-            }
-            writer.Flush();
-            client.Close();
+            Client player = new Client(gameExec.Mapa.AddPlayer(), client, reader, writer, gameExec);
         }
     }
 }
