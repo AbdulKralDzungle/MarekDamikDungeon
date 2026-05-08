@@ -39,6 +39,7 @@ public class Client
         commands.Add("exit", new Exit());
         commands.Add("pick", new Pick());
         commands.Add("help", new Help());
+        commands.Add("walk", new Walk());
         commands.Add("err", new Err());
         commands.Add("attack", new Attack());
         commands.Add("shout", new Shout());
