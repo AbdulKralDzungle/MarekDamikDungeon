@@ -40,10 +40,9 @@ jak [Command] tak [Argument] budou protaženy .ToLower()
 Příkazi: 
 Walk
 Attack
-Grab
+pick
 Exit
 Help
-Interact
 Shout
 
 Náčrt herního světa

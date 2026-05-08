@@ -43,7 +43,8 @@ namespace MarekDamikDungeon
             //idhrace je id utocnika
             //name je jmeno na koho se utoci
             ContainsPlayer(players[idHrace].RoomId, name);
-            
+            // pokud ne tak
+            ContainEneme(); // <- jo ta metoda taky zatim neni...
             return false;
         }
 
@@ -56,6 +57,7 @@ namespace MarekDamikDungeon
             // marku tady pls potrebujeme [] stringu, ktery bude obsahovat
             // [zivoty hrace, inventar hrace, nazev mistnosti, popis mistnosti, predmnety v mistnosti, protivnici v mistnosti, hraci v mistnosti]
             // tam kde je vic veci dej 1 string kde je "1. item jedna \n 2. item dva" ...
+            EnemeNames(players[idHrace].RoomId); // <- pro enemaky to tady jakstaks je
             return new string[] {"5", "1. item jedna", "idk", "idk", "1. item idk", "1. ban dlazek", "1. pavel"};
         }
 
@@ -65,17 +67,13 @@ namespace MarekDamikDungeon
             // pokud mistnost item s danym jmenem neobsahuje vrat null
             return new ExampleItem();
         }
-        public Player GetPlayerByName(string name)
-        {
-            return null;
-        }
 
         public string EnemeNames(int room)
         {
             string output = "";
-            foreach (IEnemy e in rooms[room].Enemies())
+            for (int i = 0; i < rooms[room].Enemies().Count; i++)
             {
-                output += $"{e.Name} ";
+                output += $"1. {rooms[room].Enemies()[i].Name} \n";
             }
             return output;
         }
@@ -102,5 +100,20 @@ namespace MarekDamikDungeon
             return players[id];
         }
 
+        public bool WalkPlayer(int playerId, string room)
+        {
+            foreach (Room r in rooms)
+            {
+                if (r.Name == room)
+                {
+                    if (rooms[players[playerId].RoomId].canWalkTo(r.Id))
+                    {
+                        players[playerId].RoomId = r.Id;
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
     }
 }

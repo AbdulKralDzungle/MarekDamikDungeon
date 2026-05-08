@@ -16,15 +16,31 @@ namespace MarekDamikDungeon
      */
     internal class Room
     {
+        public int Id { get => id; set => id = value; }
+
+        public string Name { get => name; set => name = value ?? throw new ArgumentNullException(nameof(value)); }
+
         private int id;
+        private string name;
         private List<IItem> items;
         private List<IEnemy> enemes;
+        private List<int> canWallkToIds; // tady jsou ids vsech mistnosti do kterych se bude hrac moct dostat s teto mistnosti
         
-        public Room(string xml, int id) 
+        public Room(string xml, int id)
         {
+            canWallkToIds = new List<int>();
+            enemes = new List<IEnemy>();
+            items = new List<IItem>();
+            Name = "nameIDK"; // nacte se z CSV snad
             this.id = id;
         }
 
+        public bool canWalkTo(int id)
+        {
+            // return canWallkToIds.Contains(id);
+            // az bude vyreseny nacitani mistnosti...
+            return true;
+        }
         public List<IEnemy> Enemies()
         {
             return enemes;
