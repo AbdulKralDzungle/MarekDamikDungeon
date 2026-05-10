@@ -34,8 +34,45 @@ namespace MarekDamikDungeon
         {
             rooms = new List<Room>();
             players = new Dictionary<int, Player>();
-            rooms.Add(new Room(xmlData, 0));    // zatim přidání pouze placeholder místnosti
-            return true;
+            //rooms.Add(new Room(xmlData, 0));    // zatim přidání pouze placeholder místnosti
+
+            string line;
+            try
+            {
+                StreamReader sr = new StreamReader(xmlData);
+                line = sr.ReadLine();
+
+                while (line != null)
+                {
+                    //file ve formatu:
+                    //id;name;idKamMuze1-idKamMuze2-idKamMuze3;popisMistnosti;
+
+                    string[] lines = line.Split(";");
+                    int id = int.Parse(lines[0]);
+                    string name = lines[1];
+                    List<int> connectedRooms = new List<int>();
+
+                    string[] conRoomsFile = lines[2].Split("-");
+                    for (int i = 0; i < connectedRooms.Count; i++)
+                    {
+                        connectedRooms.Add(int.Parse(conRoomsFile[i]));
+                    }
+
+                    string description = lines[3];
+
+                    Room room = new Room(id, name, connectedRooms, description);
+                    rooms.Add(room);
+
+                    line = sr.ReadLine();
+                }
+
+                sr.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public bool zautocNa(int idHrace, string name) // bool povedlo se - projde hrace a prisery, pokud utocnik lepsi staty, ubere prisere, jenak ubere utocnikovy
@@ -57,8 +94,51 @@ namespace MarekDamikDungeon
             // marku tady pls potrebujeme [] stringu, ktery bude obsahovat
             // [zivoty hrace, inventar hrace, nazev mistnosti, popis mistnosti, predmnety v mistnosti, protivnici v mistnosti, hraci v mistnosti]
             // tam kde je vic veci dej 1 string kde je "1. item jedna \n 2. item dva" ...
-            EnemeNames(players[idHrace].RoomId); // <- pro enemaky to tady jakstaks je
-            return new string[] {"5", "1. item jedna", "idk", "idk", "1. item idk", "1. ban dlazek", "1. pavel"};
+
+            if (players.ContainsKey(idHrace))
+            {
+                string[] status = new string[7];
+                status[0] = GetPlayer(idHrace).Health.ToString();
+                int idInv = 1;
+
+                foreach(IItem item in GetPlayer(idHrace).Inv)
+                {
+                    status[1] = idInv + item.Name + "\n";
+                    idInv++;
+                }
+
+                status[2] = rooms[GetPlayer(idHrace).RoomId].Name;
+                status[3] = rooms[GetPlayer(idHrace).RoomId].Description;
+
+                int idItems = 1;
+
+                foreach (IItem item in rooms[GetPlayer(idHrace).RoomId].Items)
+                {
+                    status[4] = idItems + item.Name + "\n";
+                    idItems++;
+                }
+
+                int idEnemies = 1;
+
+                foreach (IEnemy enemy in rooms[GetPlayer(idHrace).RoomId].Enemes)
+                {
+                    status[5] = idEnemies + enemy.Name + "\n";
+                    idEnemies++;
+                }
+
+                int idPlayers = 1;
+
+                for(int i = 0; i < players.Count; i++)
+                {
+                    if(GetPlayer(i).RoomId == rooms[GetPlayer(idHrace).RoomId].Id && GetPlayer(i) != GetPlayer(idHrace))
+                    status[6] = idPlayers + GetPlayer(i).Name + "\n";
+                    idPlayers++;
+                }
+
+                EnemeNames(players[idHrace].RoomId); // <- pro enemaky to tady jakstaks je
+                return status;
+            }
+            return null;
         }
 
         public IItem ExtractItem(string name, int room)

@@ -19,20 +19,35 @@ namespace MarekDamikDungeon
         public int Id { get => id; set => id = value; }
 
         public string Name { get => name; set => name = value ?? throw new ArgumentNullException(nameof(value)); }
+        public string Description { get => description; set => description = value; }
+        internal List<IEnemy> Enemes { get => enemes; set => enemes = value; }
+        public List<IItem> Items { get => items; set => items = value; }
 
         private int id;
         private string name;
         private List<IItem> items;
         private List<IEnemy> enemes;
         private List<int> canWallkToIds; // tady jsou ids vsech mistnosti do kterych se bude hrac moct dostat s teto mistnosti
+
+        private string description;
         
         public Room(string xml, int id)
         {
             canWallkToIds = new List<int>();
-            enemes = new List<IEnemy>();
-            items = new List<IItem>();
+            Enemes = new List<IEnemy>();
+            Items = new List<IItem>();
             Name = "nameIDK"; // nacte se z CSV snad
             this.id = id;
+        }
+
+        public Room(int id, string name, List<int> canWallkToIds, string description)
+        {
+            Id = id;
+            Name = name;
+            this.canWallkToIds = canWallkToIds;
+            Description = description;
+            Enemes = new List<IEnemy>();
+            Items = new List<IItem>();
         }
 
         public bool canWalkTo(int id)
@@ -43,7 +58,7 @@ namespace MarekDamikDungeon
         }
         public List<IEnemy> Enemies()
         {
-            return enemes;
+            return Enemes;
         }
     }
 }
