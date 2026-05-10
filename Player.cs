@@ -40,6 +40,7 @@ namespace MarekDamikDungeon
         {
             Inv = new List<IItem>();
             Random rn = new Random();
+            RoomId = 1;
             _name = "" + rn.Next(500);
             Defense = rn.Next(6) + 5;
             Attack = rn.Next(5) + 1;

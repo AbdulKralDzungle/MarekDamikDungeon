@@ -29,7 +29,16 @@ public class Help : IGameCommand
 
     public string Info()
     {
-        return "Help: Walk Attack Grab Exit Help Interact Shout"; // will have to change the help text
+        return "This is your guidline to this game: \n" +
+               "You play using commands: Walk Attack Pick Exit Help Shout \n" +
+               "You use command by writing it to the terminal, usually, the command requires argument, to specify what you are doing\n" +
+               "Commands Exit and Help can be used without argument, other will need it. Example: Shout Hello! \n" +
+               "Walk [room name] \n" +
+               "Attack [eneme/player]\n" +
+               "Pick [item]\n" +
+               "Exit\n" +
+               "Help\n" +
+               "Shout [message]\n";
     }
 
     string IGameCommand.Log(Player player)

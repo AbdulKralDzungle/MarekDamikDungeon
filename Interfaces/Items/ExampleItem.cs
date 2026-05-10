@@ -2,7 +2,7 @@ namespace MarekDamikDungeon.Interfaces.Items;
 
 public class ExampleItem : IItem
 {
-    public string Name { get; set; } =  "Example Item";
+    public string Name { get; set; } =  "ExampleItem";
     public string Description { get; set; } = "Idk, jestly je tenhle item ve hře tak se stalo něco HOOOOOOOOOOOOOOOODNĚ špatně";
     public int NumberOfUses { get; set; } = 69;
     public string Effect()

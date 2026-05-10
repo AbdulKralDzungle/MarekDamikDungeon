@@ -54,6 +54,7 @@ public class Client
         if (!commands.ContainsKey(args[0]))
             args[0] = "err";
         Result = "Something went wrong";
+        if (args.Length == 0) commands["err"].Execute(map);
         if (args.Length > 1) commands[args[0]].Execute(args[1], map, this);
         commands[args[0]].Execute(map);
         Result = konzole.Vypis($"{commands[args[0]].Info()}", map, Id);
@@ -69,12 +70,24 @@ public class Client
         string data = null;
         string[] args = null;
         string dataRecive = null;
+        SendMessage("Welcome, please tell us your name adventurer: ");
+        gameExec.Mapa.RenamePlayer(reader.ReadLine(), Id);
+        clientConnect = !CommandFromClient(new []{"help"}, gameExec.Mapa);
+        SendMessage(Result);
         while (clientConnect)
         {
-            data = reader.ReadLine();
-            data = data.ToLower();
-            args = data.Split(' ');
-            clientConnect = !CommandFromClient(args, gameExec.Mapa);
+            
+            try
+            {
+                data = reader.ReadLine();
+                data = data.ToLower();
+                args = data.Split(' ');
+                clientConnect = !CommandFromClient(args, gameExec.Mapa);
+            }
+            catch(Exception e)
+            {
+                SendMessage("some unexpected error happened\n please try restarting game or contact creator of this game \n error message: " + e.Message);
+            }
             SendMessage(Result);
         }
         writer.Flush();

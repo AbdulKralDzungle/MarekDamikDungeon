@@ -51,11 +51,18 @@ namespace MarekDamikDungeon
             Items = new List<IItem>();
         }
 
-        public bool canWalkTo(int id)
+        public bool CanWalkTo(int id)
         {
-            // return canWallkToIds.Contains(id);
-            // az bude vyreseny nacitani mistnosti...
-            return true;
+            bool canWalkTo = false;
+            foreach (int i in canWallkToIds)
+            {
+                if (id == i)
+                {
+                    canWalkTo = true;
+                    Console.WriteLine("can Walk To");
+                }
+            }
+            return canWalkTo;
         }
         public List<IEnemy> Enemies()
         {

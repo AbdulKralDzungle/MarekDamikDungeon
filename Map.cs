@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using MarekDamikDungeon.Interfaces;
+using MarekDamikDungeon.Interfaces.Enemyse;
 using MarekDamikDungeon.Interfaces.Items;
 
 namespace MarekDamikDungeon
@@ -27,7 +28,12 @@ namespace MarekDamikDungeon
         {
             hracCount = 0;
             //soubor je v bin/Debug/net8.0/Resources/MapTest.txt
-            Initialize("Resources/MapTest.txt");
+            if (Initialize("Resources/MapTest.txt")) Console.WriteLine("Map loaded properly");
+            foreach (Room r in rooms)
+            {
+                r.Items.Add(new ExampleItem());
+                r.Enemes.Add(new ExampleEnemy());
+            }
         }
 
         // potrebujeme vytahnout jednotlivy mistnosti z souboru
@@ -131,50 +137,67 @@ namespace MarekDamikDungeon
          */
         public string[] PlayerStatus(int idHrace)
         {
-            // marku tady pls potrebujeme [] stringu, ktery bude obsahovat
-            // [zivoty hrace, inventar hrace, nazev mistnosti, popis mistnosti, predmnety v mistnosti, protivnici v mistnosti, hraci v mistnosti]
-            // tam kde je vic veci dej 1 string kde je "1. item jedna \n 2. item dva" ...
-
             if (players.ContainsKey(idHrace))
             {
-                string[] status = new string[7];
-                status[0] = GetPlayer(idHrace).Health.ToString();
+                string[] status = new string[8];
+                status[0] = "You, mighty knight of name " + GetPlayer(idHrace).Name + " are under these circumstances:" + "\n";
+                status[0] += "Your helth: " + GetPlayer(idHrace).Health + "\n";
+                status[0] += "Tour defense: " + GetPlayer(idHrace).Defense + "\n";
+                status[0] += "Tour attack: " + GetPlayer(idHrace).Attack+ "\n";
                 int idInv = 1;
 
+                status[3] = "Items in your inventory: ";
+                if(GetPlayer(idHrace).Inv.Count == 0) 
+                    status[3] += "no items in your inventory";
                 foreach(IItem item in GetPlayer(idHrace).Inv)
                 {
-                    status[1] = idInv + item.Name + "\n";
+                    status[1] += idInv + " " + item.Name + "\n";
                     idInv++;
                 }
 
                 status[2] = Rooms[GetPlayer(idHrace).RoomId].Name;
                 status[3] = Rooms[GetPlayer(idHrace).RoomId].Description;
-
+                
                 int idItems = 1;
 
+                status[4] = "Items in room: ";
+                if(Rooms[GetPlayer(idHrace).RoomId].Items.Count == 0)
+                    status[4] += "no items in this room";
                 foreach (IItem item in Rooms[GetPlayer(idHrace).RoomId].Items)
                 {
-                    status[4] = idItems + item.Name + "\n";
+                    status[4] += idItems + " " + item.Name + "\n";
                     idItems++;
                 }
 
                 int idEnemies = 1;
-
+                status[5] = "Monsters in this room: ";
+                if(Rooms[GetPlayer(idHrace).RoomId].Enemes.Count == 0) 
+                    status[5] += "No monsters in this room";
                 foreach (IEnemy enemy in Rooms[GetPlayer(idHrace).RoomId].Enemes)
                 {
-                    status[5] = idEnemies + enemy.Name + "\n";
+                    status[5] += idEnemies + " " + enemy.Name + "\n";
                     idEnemies++;
                 }
 
                 int idPlayers = 1;
 
+                status[6] = "Players in this room: ";
+                if(players.Count == 0) 
+                    status[6] += "No players in this room";
                 for(int i = 0; i < players.Count; i++)
                 {
-                    if(GetPlayer(i).RoomId == Rooms[GetPlayer(idHrace).RoomId].Id && GetPlayer(i) != GetPlayer(idHrace))
-                    status[6] = idPlayers + GetPlayer(i).Name + "\n";
+                    if(GetPlayer(i).RoomId == GetPlayer(idHrace).RoomId && GetPlayer(i) != GetPlayer(idHrace)) 
+                        status[6] += idPlayers + " " + GetPlayer(i).Name + "\n";
                     idPlayers++;
                 }
 
+                status[7] = "You can walk to: ";
+                if( rooms[GetPlayer(idHrace).RoomId].CanWallkToIds.Count == 0) 
+                    status[7] += "Somehow you got softlocked...";
+                foreach (int i in rooms[GetPlayer(idHrace).RoomId - 1].CanWallkToIds)
+                {
+                    status[7] += rooms[i].Name;
+                }
                 EnemeNames(players[idHrace].RoomId); // <- pro enemaky to tady jakstaks je
                 return status;
             }
@@ -202,7 +225,7 @@ namespace MarekDamikDungeon
         {
             for (int i = 0; i < players.Count; i++)
             {
-                if (players[i].Name == name && players[i].RoomId == room)
+                if (players[i].Name.ToLower() == name.ToLower() && players[i].RoomId == room)
                 {
                     return players[i];
                 }
@@ -214,7 +237,7 @@ namespace MarekDamikDungeon
         {
             for (int i = 0; i < Rooms[room].Enemes.Count; i++)
             {
-                if (Rooms[room].Enemes[i].Name == name)
+                if (Rooms[room].Enemes[i].Name.ToLower() == name.ToLower())
                 {
                     return true;
                 }
@@ -238,16 +261,34 @@ namespace MarekDamikDungeon
         {
             foreach (Room r in Rooms)
             {
-                if (r.Name == room)
+                if (r.Name.ToLower() == room.ToLower())
                 {
-                    if (Rooms[players[playerId].RoomId].canWalkTo(r.Id))
+                    if (Rooms[players[playerId].RoomId].CanWalkTo(r.Id))
                     {
+                        Console.WriteLine("hrac dosel");
                         players[playerId].RoomId = r.Id;
                         return true;
                     }
                 }
             }
             return false;
+        }
+
+        public void RenamePlayer(string? name, int id)
+        {
+            try
+            {
+                if (name != null)
+                {
+                    players[id].Name = name;
+                    return;
+                }
+                players[id].Name = "SirSpatneSePojmenoval" + id ;
+            }
+            catch (Exception e)
+            {
+                // idk, tohle by nemělo nastat, a pokud jo tak se bude prostě ignorovat
+            }
         }
     }
 }

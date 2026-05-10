@@ -4,10 +4,11 @@ namespace MarekDamikDungeon.Interfaces.Commands;
 
 internal class Attack : IGameCommand
 {
-    private int dmg;
+    private bool trefa;
     public bool Execute(string arg, Map map, Client client)
     {
-        return map.zautocNa(client.Id, arg);
+        trefa = map.zautocNa(client.Id, arg);
+        return trefa;
     }
 
     public bool Execute(Map map)
@@ -17,12 +18,13 @@ internal class Attack : IGameCommand
 
     public string Info()
     {
-        return $"you delt {dmg}";
+        if (!trefa) return "you hit your target";
+        return "you failed your attack and you have bin damaged";
     }
 
     public string Log(Player player)
     {
-        return $"Player {player.Name} attacks dmg: {dmg} target: ";
+        return $"Player {player.Name} attacks ";
     }
 
     bool IGameCommand.Exit()

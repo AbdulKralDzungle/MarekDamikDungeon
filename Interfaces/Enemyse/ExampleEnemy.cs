@@ -2,7 +2,7 @@ namespace MarekDamikDungeon.Interfaces.Enemyse;
 
 public class ExampleEnemy : IEnemy
 {
-    public string Name { get; set; } = "Example Enemy";
+    public string Name { get; set; } = "ExampleEnemy";
     public string Description { get; set; } = "Jak jsem se dostal do hry... tady nemam co delat, POMOOOOOOOOOOC";
     public int Hp { get; set; }
     public int MaxHp { get; set; }
