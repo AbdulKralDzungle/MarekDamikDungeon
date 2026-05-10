@@ -20,13 +20,14 @@ namespace MarekDamikDungeon
         private List<Room> rooms;
         private Dictionary<int, Player> players;
         private int hracCount;
-        
-        
+
+        internal List<Room> Rooms { get => rooms;}
 
         public Map()
         {
             hracCount = 0;
-            Initialize("Nacti to tady z CSVcka");
+            //soubor je v bin/Debug/net8.0/Resources/MapTest.txt
+            Initialize("Resources/MapTest.txt");
         }
 
         // potrebujeme vytahnout jednotlivy mistnosti z souboru
@@ -54,7 +55,8 @@ namespace MarekDamikDungeon
                     List<int> connectedRooms = new List<int>();
 
                     string[] conRoomsFile = lines[2].Split("-");
-                    for (int i = 0; i < connectedRooms.Count; i++)
+                    //Console.WriteLine(lines[2]);
+                    for (int i = 0; i < conRoomsFile.Length; i++)
                     {
                         connectedRooms.Add(int.Parse(conRoomsFile[i]));
                     }
@@ -62,7 +64,7 @@ namespace MarekDamikDungeon
                     string description = lines[3];
 
                     Room room = new Room(id, name, connectedRooms, description);
-                    rooms.Add(room);
+                    Rooms.Add(room);
 
                     line = sr.ReadLine();
                 }
@@ -99,11 +101,11 @@ namespace MarekDamikDungeon
             {
                 IEnemy enemy = null;
 
-                for (int i = 0; i < rooms[players[idHrace].RoomId].Enemes.Count; i++)
+                for (int i = 0; i < Rooms[players[idHrace].RoomId].Enemes.Count; i++)
                 {
-                    if (rooms[players[idHrace].RoomId].Enemes[i].Name == name)
+                    if (Rooms[players[idHrace].RoomId].Enemes[i].Name == name)
                     {
-                        enemy = rooms[players[idHrace].RoomId].Enemes[i];
+                        enemy = Rooms[players[idHrace].RoomId].Enemes[i];
                     }
                 }
                 if(enemy != null)
@@ -145,12 +147,12 @@ namespace MarekDamikDungeon
                     idInv++;
                 }
 
-                status[2] = rooms[GetPlayer(idHrace).RoomId].Name;
-                status[3] = rooms[GetPlayer(idHrace).RoomId].Description;
+                status[2] = Rooms[GetPlayer(idHrace).RoomId].Name;
+                status[3] = Rooms[GetPlayer(idHrace).RoomId].Description;
 
                 int idItems = 1;
 
-                foreach (IItem item in rooms[GetPlayer(idHrace).RoomId].Items)
+                foreach (IItem item in Rooms[GetPlayer(idHrace).RoomId].Items)
                 {
                     status[4] = idItems + item.Name + "\n";
                     idItems++;
@@ -158,7 +160,7 @@ namespace MarekDamikDungeon
 
                 int idEnemies = 1;
 
-                foreach (IEnemy enemy in rooms[GetPlayer(idHrace).RoomId].Enemes)
+                foreach (IEnemy enemy in Rooms[GetPlayer(idHrace).RoomId].Enemes)
                 {
                     status[5] = idEnemies + enemy.Name + "\n";
                     idEnemies++;
@@ -168,7 +170,7 @@ namespace MarekDamikDungeon
 
                 for(int i = 0; i < players.Count; i++)
                 {
-                    if(GetPlayer(i).RoomId == rooms[GetPlayer(idHrace).RoomId].Id && GetPlayer(i) != GetPlayer(idHrace))
+                    if(GetPlayer(i).RoomId == Rooms[GetPlayer(idHrace).RoomId].Id && GetPlayer(i) != GetPlayer(idHrace))
                     status[6] = idPlayers + GetPlayer(i).Name + "\n";
                     idPlayers++;
                 }
@@ -189,9 +191,9 @@ namespace MarekDamikDungeon
         public string EnemeNames(int room)
         {
             string output = "";
-            for (int i = 0; i < rooms[room].Enemies().Count; i++)
+            for (int i = 0; i < Rooms[room].Enemies().Count; i++)
             {
-                output += $"1. {rooms[room].Enemies()[i].Name} \n";
+                output += $"1. {Rooms[room].Enemies()[i].Name} \n";
             }
             return output;
         }
@@ -210,9 +212,9 @@ namespace MarekDamikDungeon
         
         public bool ContainEneme(int room, string name)
         {
-            for (int i = 0; i < rooms[room].Enemes.Count; i++)
+            for (int i = 0; i < Rooms[room].Enemes.Count; i++)
             {
-                if (rooms[room].Enemes[i].Name == name)
+                if (Rooms[room].Enemes[i].Name == name)
                 {
                     return true;
                 }
@@ -234,11 +236,11 @@ namespace MarekDamikDungeon
 
         public bool WalkPlayer(int playerId, string room)
         {
-            foreach (Room r in rooms)
+            foreach (Room r in Rooms)
             {
                 if (r.Name == room)
                 {
-                    if (rooms[players[playerId].RoomId].canWalkTo(r.Id))
+                    if (Rooms[players[playerId].RoomId].canWalkTo(r.Id))
                     {
                         players[playerId].RoomId = r.Id;
                         return true;

@@ -22,6 +22,7 @@ namespace MarekDamikDungeon
         public string Description { get => description; set => description = value; }
         internal List<IEnemy> Enemes { get => enemes; set => enemes = value; }
         public List<IItem> Items { get => items; set => items = value; }
+        public List<int> CanWallkToIds { get => canWallkToIds; set => canWallkToIds = value; }
 
         private int id;
         private string name;
@@ -59,6 +60,16 @@ namespace MarekDamikDungeon
         public List<IEnemy> Enemies()
         {
             return Enemes;
+        }
+
+        public virtual string ToString()
+        {
+            string temprooms = "";
+            for(int i = 0; i < canWallkToIds.Count; i++)
+            {
+                temprooms = canWallkToIds[i] + " ";
+            }
+            return $"{Id}, {Name}, {Description}, {temprooms}";
         }
     }
 }
