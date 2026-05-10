@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,13 +20,14 @@ namespace MarekDamikDungeon
         private List<Room> rooms;
         private Dictionary<int, Player> players;
         private int hracCount;
-        
-        
+
+        internal List<Room> Rooms { get => rooms;}
 
         public Map()
         {
             hracCount = 0;
-            Initialize("Nacti to tady z CSVcka");
+            //soubor je v bin/Debug/net8.0/Resources/MapTest.txt
+            Initialize("Resources/MapTest.txt");
         }
 
         // potrebujeme vytahnout jednotlivy mistnosti z souboru
@@ -34,17 +36,92 @@ namespace MarekDamikDungeon
         {
             rooms = new List<Room>();
             players = new Dictionary<int, Player>();
-            rooms.Add(new Room(xmlData, 0));    // zatim přidání pouze placeholder místnosti
-            return true;
+            //rooms.Add(new Room(xmlData, 0));    // zatim přidání pouze placeholder místnosti
+
+            string line;
+            try
+            {
+                StreamReader sr = new StreamReader(xmlData);
+                line = sr.ReadLine();
+
+                while (line != null)
+                {
+                    //file ve formatu:
+                    //id;name;idKamMuze1-idKamMuze2-idKamMuze3;popisMistnosti;
+
+                    string[] lines = line.Split(";");
+                    int id = int.Parse(lines[0]);
+                    string name = lines[1];
+                    List<int> connectedRooms = new List<int>();
+
+                    string[] conRoomsFile = lines[2].Split("-");
+                    //Console.WriteLine(lines[2]);
+                    for (int i = 0; i < conRoomsFile.Length; i++)
+                    {
+                        connectedRooms.Add(int.Parse(conRoomsFile[i]));
+                    }
+
+                    string description = lines[3];
+
+                    Room room = new Room(id, name, connectedRooms, description);
+                    Rooms.Add(room);
+
+                    line = sr.ReadLine();
+                }
+
+                sr.Close();
+                return true;
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         public bool zautocNa(int idHrace, string name) // bool povedlo se - projde hrace a prisery, pokud utocnik lepsi staty, ubere prisere, jenak ubere utocnikovy
         {
             //idhrace je id utocnika
             //name je jmeno na koho se utoci
-            ContainsPlayer(players[idHrace].RoomId, name);
-            // pokud ne tak
-            ContainEneme(); // <- jo ta metoda taky zatim neni...
+            Player attackedPlayer = ContainsPlayer(players[idHrace].RoomId, name);
+
+            if (attackedPlayer != null)
+            {
+                if(GetPlayer(idHrace).Defense > attackedPlayer.Defense)
+                {
+                    attackedPlayer.GetDamaged(GetPlayer(idHrace).Attack);
+                    return true;
+                }
+                else
+                {
+                    GetPlayer(idHrace).GetDamaged(attackedPlayer.Attack);
+                    return true;
+                }
+            }
+            else if(ContainEneme(players[idHrace].RoomId, name))
+            {
+                IEnemy enemy = null;
+
+                for (int i = 0; i < Rooms[players[idHrace].RoomId].Enemes.Count; i++)
+                {
+                    if (Rooms[players[idHrace].RoomId].Enemes[i].Name == name)
+                    {
+                        enemy = Rooms[players[idHrace].RoomId].Enemes[i];
+                    }
+                }
+                if(enemy != null)
+                {
+                    if (GetPlayer(idHrace).Defense > enemy.Defense)
+                    {
+                        enemy.ChangeHelth(GetPlayer(idHrace).Attack);
+                        return true;
+                    }
+                    else
+                    {
+                        GetPlayer(idHrace).GetDamaged(enemy.Damage);
+                        return true;
+                    }
+                }
+            }
             return false;
         }
 
@@ -57,8 +134,51 @@ namespace MarekDamikDungeon
             // marku tady pls potrebujeme [] stringu, ktery bude obsahovat
             // [zivoty hrace, inventar hrace, nazev mistnosti, popis mistnosti, predmnety v mistnosti, protivnici v mistnosti, hraci v mistnosti]
             // tam kde je vic veci dej 1 string kde je "1. item jedna \n 2. item dva" ...
-            EnemeNames(players[idHrace].RoomId); // <- pro enemaky to tady jakstaks je
-            return new string[] {"5", "1. item jedna", "idk", "idk", "1. item idk", "1. ban dlazek", "1. pavel"};
+
+            if (players.ContainsKey(idHrace))
+            {
+                string[] status = new string[7];
+                status[0] = GetPlayer(idHrace).Health.ToString();
+                int idInv = 1;
+
+                foreach(IItem item in GetPlayer(idHrace).Inv)
+                {
+                    status[1] = idInv + item.Name + "\n";
+                    idInv++;
+                }
+
+                status[2] = Rooms[GetPlayer(idHrace).RoomId].Name;
+                status[3] = Rooms[GetPlayer(idHrace).RoomId].Description;
+
+                int idItems = 1;
+
+                foreach (IItem item in Rooms[GetPlayer(idHrace).RoomId].Items)
+                {
+                    status[4] = idItems + item.Name + "\n";
+                    idItems++;
+                }
+
+                int idEnemies = 1;
+
+                foreach (IEnemy enemy in Rooms[GetPlayer(idHrace).RoomId].Enemes)
+                {
+                    status[5] = idEnemies + enemy.Name + "\n";
+                    idEnemies++;
+                }
+
+                int idPlayers = 1;
+
+                for(int i = 0; i < players.Count; i++)
+                {
+                    if(GetPlayer(i).RoomId == Rooms[GetPlayer(idHrace).RoomId].Id && GetPlayer(i) != GetPlayer(idHrace))
+                    status[6] = idPlayers + GetPlayer(i).Name + "\n";
+                    idPlayers++;
+                }
+
+                EnemeNames(players[idHrace].RoomId); // <- pro enemaky to tady jakstaks je
+                return status;
+            }
+            return null;
         }
 
         public IItem ExtractItem(string name, int room)
@@ -71,20 +191,34 @@ namespace MarekDamikDungeon
         public string EnemeNames(int room)
         {
             string output = "";
-            for (int i = 0; i < rooms[room].Enemies().Count; i++)
+            for (int i = 0; i < Rooms[room].Enemies().Count; i++)
             {
-                output += $"1. {rooms[room].Enemies()[i].Name} \n";
+                output += $"1. {Rooms[room].Enemies()[i].Name} \n";
             }
             return output;
         }
 
         public Player ContainsPlayer(int room,  string name)
         {
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].Name == name && players[i].RoomId == room)
+                {
+                    return players[i];
+                }
+            }
             return null;
         }
         
-        public bool ContainEneme()
+        public bool ContainEneme(int room, string name)
         {
+            for (int i = 0; i < Rooms[room].Enemes.Count; i++)
+            {
+                if (Rooms[room].Enemes[i].Name == name)
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
@@ -102,11 +236,11 @@ namespace MarekDamikDungeon
 
         public bool WalkPlayer(int playerId, string room)
         {
-            foreach (Room r in rooms)
+            foreach (Room r in Rooms)
             {
                 if (r.Name == room)
                 {
-                    if (rooms[players[playerId].RoomId].canWalkTo(r.Id))
+                    if (Rooms[players[playerId].RoomId].canWalkTo(r.Id))
                     {
                         players[playerId].RoomId = r.Id;
                         return true;

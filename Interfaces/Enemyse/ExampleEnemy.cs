@@ -7,6 +7,8 @@ public class ExampleEnemy : IEnemy
     public int Hp { get; set; }
     public int MaxHp { get; set; }
     public int Damage { get; set; }
+    public int Defense { get; set; }
+
     public bool ChangeHelth(int dmg)
     {
         throw new NotImplementedException();

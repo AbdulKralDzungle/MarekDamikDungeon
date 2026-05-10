@@ -16,6 +16,8 @@ namespace MarekDamikDungeon.Interfaces
         public int Hp { get; set; }
         public int MaxHp { get; set; }
 
+        public int Defense { get; set; }
+
         /**
          * how much damage the enemy deals to a player
          */

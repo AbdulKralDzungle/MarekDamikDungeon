@@ -14,7 +14,11 @@ namespace MarekDamikDungeon
     {
         private int _health;
         private int _maxHealth;
-        // private _defense;
+
+        private int _defense;
+        private int _attack;
+
+
         private int _roomId;
         private string _name;
         private bool _alive;
@@ -27,14 +31,20 @@ namespace MarekDamikDungeon
 
         public int Health{ get => _health; set => _health = value; }
         public bool Alive{ get => _alive; set => _alive = value; }
-        public int MaxHealth { get => _maxHealth;}
+        public int MaxHealth { get => _maxHealth; set => _maxHealth = value; }
         public List<IItem> Inv { get => _inv; set => _inv = value; }
+        public int Defense { get => _defense; set => _defense = value; }
+        public int Attack { get => _attack; set => _attack = value; }
 
         public Player()
         {
             Inv = new List<IItem>();
             Random rn = new Random();
             _name = "" + rn.Next(500);
+            Defense = rn.Next(6) + 5;
+            Attack = rn.Next(5) + 1;
+            MaxHealth = 20;
+            Health = MaxHealth;
         } 
 
         public string GetDamaged(int dmg)
