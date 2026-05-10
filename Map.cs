@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -79,9 +80,46 @@ namespace MarekDamikDungeon
         {
             //idhrace je id utocnika
             //name je jmeno na koho se utoci
-            ContainsPlayer(players[idHrace].RoomId, name);
-            // pokud ne tak
-            ContainEneme(); // <- jo ta metoda taky zatim neni...
+            Player attackedPlayer = ContainsPlayer(players[idHrace].RoomId, name);
+
+            if (attackedPlayer != null)
+            {
+                if(GetPlayer(idHrace).Defense > attackedPlayer.Defense)
+                {
+                    attackedPlayer.GetDamaged(GetPlayer(idHrace).Attack);
+                    return true;
+                }
+                else
+                {
+                    GetPlayer(idHrace).GetDamaged(attackedPlayer.Attack);
+                    return true;
+                }
+            }
+            else if(ContainEneme(players[idHrace].RoomId, name))
+            {
+                IEnemy enemy = null;
+
+                for (int i = 0; i < rooms[players[idHrace].RoomId].Enemes.Count; i++)
+                {
+                    if (rooms[players[idHrace].RoomId].Enemes[i].Name == name)
+                    {
+                        enemy = rooms[players[idHrace].RoomId].Enemes[i];
+                    }
+                }
+                if(enemy != null)
+                {
+                    if (GetPlayer(idHrace).Defense > enemy.Defense)
+                    {
+                        enemy.ChangeHelth(GetPlayer(idHrace).Attack);
+                        return true;
+                    }
+                    else
+                    {
+                        GetPlayer(idHrace).GetDamaged(enemy.Damage);
+                        return true;
+                    }
+                }
+            }
             return false;
         }
 
@@ -160,11 +198,25 @@ namespace MarekDamikDungeon
 
         public Player ContainsPlayer(int room,  string name)
         {
+            for (int i = 0; i < players.Count; i++)
+            {
+                if (players[i].Name == name && players[i].RoomId == room)
+                {
+                    return players[i];
+                }
+            }
             return null;
         }
         
-        public bool ContainEneme()
+        public bool ContainEneme(int room, string name)
         {
+            for (int i = 0; i < rooms[room].Enemes.Count; i++)
+            {
+                if (rooms[room].Enemes[i].Name == name)
+                {
+                    return true;
+                }
+            }
             return false;
         }
 
