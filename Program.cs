@@ -9,7 +9,7 @@ namespace MarekDamikDungeon
          */
         static void Main(string[] args)
         {
-            Server server = new Server(5000);
+            Server server = new Server(8081);
 
             /*
             Map map = new Map();
