@@ -194,9 +194,9 @@ namespace MarekDamikDungeon
                 status[7] = "You can walk to: ";
                 if( rooms[GetPlayer(idHrace).RoomId].CanWallkToIds.Count == 0) 
                     status[7] += "Somehow you got softlocked...";
-                foreach (int i in rooms[GetPlayer(idHrace).RoomId - 1].CanWallkToIds)
+                foreach (int i in rooms[GetPlayer(idHrace).RoomId].CanWallkToIds)
                 {
-                    status[7] += rooms[i].Name;
+                    status[7] += rooms[i].Name + " ";
                 }
                 EnemeNames(players[idHrace].RoomId); // <- pro enemaky to tady jakstaks je
                 return status;
@@ -259,14 +259,15 @@ namespace MarekDamikDungeon
 
         public bool WalkPlayer(int playerId, string room)
         {
-            foreach (Room r in Rooms)
+            for (int i = 0; i < rooms.Count; i ++)
             {
-                if (r.Name.ToLower() == room.ToLower())
+                if (rooms[i].Name.ToLower() == room.ToLower())
                 {
-                    if (Rooms[players[playerId].RoomId].CanWalkTo(r.Id))
+                    Console.WriteLine($"room name {rooms[i].Name}");
+                    if (rooms[players[playerId].RoomId].CanWalkTo(i))
                     {
                         Console.WriteLine("hrac dosel");
-                        players[playerId].RoomId = r.Id;
+                        players[playerId].RoomId = i;
                         return true;
                     }
                 }

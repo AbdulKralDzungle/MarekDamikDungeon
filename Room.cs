@@ -16,7 +16,6 @@ namespace MarekDamikDungeon
      */
     internal class Room
     {
-        public int Id { get => id; set => id = value; }
 
         public string Name { get => name; set => name = value ?? throw new ArgumentNullException(nameof(value)); }
         public string Description { get => description; set => description = value; }
@@ -24,7 +23,6 @@ namespace MarekDamikDungeon
         public List<IItem> Items { get => items; set => items = value; }
         public List<int> CanWallkToIds { get => canWallkToIds; set => canWallkToIds = value; }
 
-        private int id;
         private string name;
         private List<IItem> items;
         private List<IEnemy> enemes;
@@ -32,18 +30,8 @@ namespace MarekDamikDungeon
 
         private string description;
         
-        public Room(string xml, int id)
-        {
-            canWallkToIds = new List<int>();
-            Enemes = new List<IEnemy>();
-            Items = new List<IItem>();
-            Name = "nameIDK"; // nacte se z CSV snad
-            this.id = id;
-        }
-
         public Room(int id, string name, List<int> canWallkToIds, string description)
         {
-            Id = id;
             Name = name;
             this.canWallkToIds = canWallkToIds;
             Description = description;
@@ -56,6 +44,7 @@ namespace MarekDamikDungeon
             bool canWalkTo = false;
             foreach (int i in canWallkToIds)
             {
+                Console.WriteLine(i + " : " + id);
                 if (id == i)
                 {
                     canWalkTo = true;
@@ -76,7 +65,7 @@ namespace MarekDamikDungeon
             {
                 temprooms = canWallkToIds[i] + " ";
             }
-            return $"{Id}, {Name}, {Description}, {temprooms}";
+            return $"{Name}, {Description}, {temprooms}";
         }
     }
 }
