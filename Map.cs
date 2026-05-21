@@ -59,22 +59,17 @@ namespace MarekDamikDungeon
                     int id = int.Parse(lines[0]);
                     string name = lines[1];
                     List<int> connectedRooms = new List<int>();
-
                     string[] conRoomsFile = lines[2].Split("-");
                     //Console.WriteLine(lines[2]);
                     for (int i = 0; i < conRoomsFile.Length; i++)
                     {
                         connectedRooms.Add(int.Parse(conRoomsFile[i]));
                     }
-
                     string description = lines[3];
-
                     Room room = new Room(id, name, connectedRooms, description);
                     Rooms.Add(room);
-
                     line = sr.ReadLine();
                 }
-
                 sr.Close();
                 return true;
             }
@@ -83,7 +78,7 @@ namespace MarekDamikDungeon
                 return false;
             }
         }
-
+        
         public bool zautocNa(int idHrace, string name) // bool povedlo se - projde hrace a prisery, pokud utocnik lepsi staty, ubere prisere, jenak ubere utocnikovy
         {
             //idhrace je id utocnika
