@@ -34,6 +34,8 @@ public class Walk: IGameCommand
 
     string IGameCommand.Log(Player player)
     {
+        if(succesfull)
         return $"player {player.Name} walked into: ";
+        return $"player {player.Name} tried invalid walk command";
     }
 }

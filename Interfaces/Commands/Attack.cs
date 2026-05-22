@@ -24,7 +24,7 @@ internal class Attack : IGameCommand
 
     public string Log(Player player)
     {
-        return $"Player {player.Name} attacks ";
+        return $"Player {player.Name} attacks and is succesfull";
     }
 
     bool IGameCommand.Exit()

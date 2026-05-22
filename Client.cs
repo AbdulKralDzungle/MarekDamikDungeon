@@ -86,7 +86,8 @@ public class Client
             }
             catch(Exception e)
             {
-                SendMessage("some unexpected error happened\n please try restarting game or contact creator of this game \n error message: " + e.Message);
+                SendMessage("some unexpected error happened\n please try restarting game or contact creator of this game \n error message");
+                log.Log("some unexpected error happened\n please try restarting game or contact creator of this game \n error message: " + e.Message);
             }
             SendMessage(Result);
         }
