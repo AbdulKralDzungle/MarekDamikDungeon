@@ -1,3 +1,4 @@
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using MarekDamikDungeon.Interfaces;
@@ -14,11 +15,13 @@ public class Client
     private TcpClient client;
     private StreamReader reader;
     private StreamWriter writer;
+    private bool clientConnect;
     private GameExec gameExec;
     private Logger log = new Logger();
     public Client(int id, TcpClient client, StreamReader reader, StreamWriter writer, GameExec gameExec)
     {
         this.client = client;
+        this.clientConnect = true;
         this.gameExec = gameExec;
         this.gameExec.AddClient(this);
         this.reader = reader;
@@ -66,7 +69,6 @@ public class Client
     {
         writer.WriteLine("Byl jsi pripojen");
         writer.Flush();
-        bool clientConnect = true;
         string data = null;
         string[] args = null;
         string dataRecive = null;
@@ -97,9 +99,21 @@ public class Client
 
     public void SendMessage(string message)
     {
-        writer.WriteLine(message);
-        writer.Flush();
-        Console.WriteLine("sent");
+        try
+        {
+            writer.WriteLine(message);
+            writer.Flush();
+            Console.WriteLine("sent");
+        }
+        catch (Exception e)
+        {
+            if (client.Connected == false)
+            {
+                clientConnect = false;
+                return;
+            }
+            log.Log("stream writer error, error message: \n " + e.Message);
+        }
     }
     public void Brodcast(string message)
     {
