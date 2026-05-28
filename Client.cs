@@ -142,6 +142,7 @@ public class Client
             SendMessage(Result);
         }
         writer.Flush();
+        accs.SavePlayer(gameExec.Mapa.GetPlayer(Id));
         client.Close();
     }
 
