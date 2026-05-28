@@ -65,6 +65,12 @@ public class Client
         return commands[args[0]].Exit();
     }
 
+    public void login()
+    {
+        string result = " ";
+        SendMessage("Welcome, please tell us your name adventurer: ");
+    }
+    
     public void ExecteLoop()
     {
         writer.WriteLine("Byl jsi pripojen");
@@ -72,13 +78,11 @@ public class Client
         string data = null;
         string[] args = null;
         string dataRecive = null;
-        SendMessage("Welcome, please tell us your name adventurer: ");
         gameExec.Mapa.RenamePlayer(reader.ReadLine(), Id);
         clientConnect = !CommandFromClient(new []{"help"}, gameExec.Mapa);
         SendMessage(Result);
         while (clientConnect)
         {
-            
             try
             {
                 data = reader.ReadLine();
