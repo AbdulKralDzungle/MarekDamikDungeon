@@ -14,17 +14,24 @@ public class AccountMang
         string itemNames = string.Join(";", p.Inv.Select(item => item.Name));
         string data = $"{properties[0]};{p.RoomId};{p.Health};{p.Defense};{p.Attack};{itemNames}"; 
         Directory.CreateDirectory("Accounts");
-        File.WriteAllText(path, data);
+        StreamWriter streamWriter = new StreamWriter(path);
+        streamWriter.Write(data);
+        streamWriter.Flush();
+        streamWriter.Close();
         return true;
     }
 
     public bool RegisterPlayer(string name, string password, Player p)
     {
         string path = $"Accounts/{name}.txt";
+        Console.WriteLine("lookingForPath");
         if (File.Exists(path)) return false;
         StreamWriter streamWriter = new StreamWriter(path);
+        Console.WriteLine("savingPlayer");
         streamWriter.WriteLine(password);
         streamWriter.Flush();
+        streamWriter.Close();
+        p.Name = name;
         SavePlayer(p);
         return true;
     }

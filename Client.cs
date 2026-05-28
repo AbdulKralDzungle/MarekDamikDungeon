@@ -21,6 +21,7 @@ public class Client
     private Logger log = new Logger();
     public Client(int id, TcpClient client, StreamReader reader, StreamWriter writer, GameExec gameExec)
     {
+        accs = new AccountMang();
         this.client = client;
         this.clientConnect = true;
         this.gameExec = gameExec;
@@ -69,11 +70,13 @@ public class Client
     public void login()
     {
         SendMessage("1. to login, 2. to register");
+        writer.Flush();
         string result = " ";
-        bool registered = true;
+        bool registered;
         int i;
         do
         {
+            registered = true;
             result = reader.ReadLine();
             try
             {
@@ -81,30 +84,43 @@ public class Client
                 if (i == 1)
                 {
                     SendMessage("Welcome, please tell us your name adventurer: ");
+                    writer.Flush();
                     string? name = reader.ReadLine();
                     SendMessage("Please tell us your password: (dramatic pause)");
+                    writer.Flush();
                     string? password = reader.ReadLine();
                     if (name == null || password == null)
                     {
                         registered = false;
+                        SendMessage("Name or password was empty, try again");
+                        writer.Flush();
                     }
                     else
                     {
                         accs.LoadPlayer(name, password,gameExec.Mapa.GetPlayer(Id));
+                        SendMessage("Logged in");
+                        writer.Flush();
                     }
                 }else if (i == 2)
                 {
                     SendMessage("Welcome, please tell us your new name: ");
+                    writer.Flush();
                     string? name = reader.ReadLine();
                     SendMessage("Please make your password: ");
+                    writer.Flush();
                     string? password = reader.ReadLine();
                     if (name == null || password == null)
                     {
                         registered = false;
+                        SendMessage("Name or password was empty, try again");
+                        writer.Flush();
                     }
                     else
                     {
+                        SendMessage("Account created");
+                        SendMessage($"Name: {gameExec.Mapa.GetPlayer(Id).Name}");
                         accs.RegisterPlayer(name, password, gameExec.Mapa.GetPlayer(Id));
+                        writer.Flush();
                     }
                 }
             }
@@ -122,7 +138,7 @@ public class Client
         string data = null;
         string[] args = null;
         string dataRecive = null;
-        gameExec.Mapa.RenamePlayer(reader.ReadLine(), Id);
+        login();
         clientConnect = !CommandFromClient(new []{"help"}, gameExec.Mapa);
         SendMessage(Result);
         while (clientConnect)
