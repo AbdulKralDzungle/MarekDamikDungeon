@@ -15,6 +15,7 @@ public class Client
     private TcpClient client;
     private StreamReader reader;
     private StreamWriter writer;
+    private AccountMang accs;
     private bool clientConnect;
     private GameExec gameExec;
     private Logger log = new Logger();
@@ -69,9 +70,28 @@ public class Client
     {
         SendMessage("1. to login, 2. to register");
         string result = " ";
-        result = reader.ReadLine();
-        
-        SendMessage("Welcome, please tell us your name adventurer: ");
+        bool registered = false;
+        int i;
+        do
+        {
+            result = reader.ReadLine();
+            try
+            {
+                i = Int32.Parse(result);
+                if (i == 1)
+                {
+                    SendMessage("Welcome, please tell us your name adventurer: ");
+                    string? name = reader.ReadLine();
+                    accs.LoadPlayer(gameExec.Mapa.GetPlayer(Id));
+                }
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            SendMessage("Welcome, please tell us your name adventurer: ");
+        } while (!registered);
     }
     
     public void ExecteLoop()
