@@ -67,7 +67,10 @@ public class Client
 
     public void login()
     {
+        SendMessage("1. to login, 2. to register");
         string result = " ";
+        result = reader.ReadLine();
+        
         SendMessage("Welcome, please tell us your name adventurer: ");
     }
     
