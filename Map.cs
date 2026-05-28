@@ -38,16 +38,16 @@ namespace MarekDamikDungeon
 
         // potrebujeme vytahnout jednotlivy mistnosti z souboru
         // mistnosti budou fungovat tak ze budes mit mistnost, ta bude mit svoje id, a idecka mistnosti do kterejch se pude z ni dostat
-        private bool Initialize(string xmlData)
+        private bool Initialize(string data)
         {
             rooms = new List<Room>();
             players = new Dictionary<int, Player>();
-            //rooms.Add(new Room(xmlData, 0));    // zatim přidání pouze placeholder místnosti
+            //rooms.Add(new Room(data, 0));    // zatim přidání pouze placeholder místnosti
 
             string line;
             try
             {
-                StreamReader sr = new StreamReader(xmlData);
+                StreamReader sr = new StreamReader(data);
                 line = sr.ReadLine();
 
                 while (line != null)
