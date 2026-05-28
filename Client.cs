@@ -70,7 +70,7 @@ public class Client
     {
         SendMessage("1. to login, 2. to register");
         string result = " ";
-        bool registered = false;
+        bool registered = true;
         int i;
         do
         {
@@ -82,15 +82,36 @@ public class Client
                 {
                     SendMessage("Welcome, please tell us your name adventurer: ");
                     string? name = reader.ReadLine();
-                    accs.LoadPlayer(gameExec.Mapa.GetPlayer(Id));
+                    SendMessage("Please tell us your password: (dramatic pause)");
+                    string? password = reader.ReadLine();
+                    if (name == null || password == null)
+                    {
+                        registered = false;
+                    }
+                    else
+                    {
+                        accs.LoadPlayer(name, password,gameExec.Mapa.GetPlayer(Id));
+                    }
+                }else if (i == 2)
+                {
+                    SendMessage("Welcome, please tell us your new name: ");
+                    string? name = reader.ReadLine();
+                    SendMessage("Please make your password: ");
+                    string? password = reader.ReadLine();
+                    if (name == null || password == null)
+                    {
+                        registered = false;
+                    }
+                    else
+                    {
+                        accs.RegisterPlayer(name, password, gameExec.Mapa.GetPlayer(Id));
+                    }
                 }
             }
             catch (Exception e)
             {
-
+                registered = false;
             }
-
-            SendMessage("Welcome, please tell us your name adventurer: ");
         } while (!registered);
     }
     
