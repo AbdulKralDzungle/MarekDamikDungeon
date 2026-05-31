@@ -7,17 +7,15 @@ public class AccountMang
     public bool SavePlayer(Player p)
     {
         string path = $"Accounts/{p.Name}.txt";
-        StreamReader streamReader = new StreamReader(path);
-        string? content = streamReader.ReadLine();
+        Directory.CreateDirectory("Accounts");
+        if (!File.Exists(path)) return false;
+
+        string? content = File.ReadLines(path).FirstOrDefault();
         if (content == null) return false;
         string[] properties = content.Split(";");
         string itemNames = string.Join(";", p.Inv.Select(item => item.Name));
         string data = $"{properties[0]};{p.RoomId};{p.Health};{p.Defense};{p.Attack};{itemNames}"; 
-        Directory.CreateDirectory("Accounts");
-        StreamWriter streamWriter = new StreamWriter(path);
-        streamWriter.Write(data);
-        streamWriter.Flush();
-        streamWriter.Close();
+        File.WriteAllText(path, data);
         return true;
     }
 
@@ -25,12 +23,10 @@ public class AccountMang
     {
         string path = $"Accounts/{name}.txt";
         Console.WriteLine("lookingForPath");
+        Directory.CreateDirectory("Accounts");
         if (File.Exists(path)) return false;
-        StreamWriter streamWriter = new StreamWriter(path);
         Console.WriteLine("savingPlayer");
-        streamWriter.WriteLine(password);
-        streamWriter.Flush();
-        streamWriter.Close();
+        File.WriteAllText(path, password);
         p.Name = name;
         SavePlayer(p);
         return true;
@@ -41,8 +37,7 @@ public class AccountMang
         string path = $"Accounts/{name}.txt";
         if (File.Exists(path))
         {
-            StreamReader streamReader = new StreamReader(path);
-            string? content = streamReader.ReadLine();
+            string? content = File.ReadLines(path).FirstOrDefault();
             if (content == null) return false;
             string[] properties = content.Split(";");
             if (password == properties[0])

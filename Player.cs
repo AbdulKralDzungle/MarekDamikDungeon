@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MarekDamikDungeon.Interfaces;
+using MarekDamikDungeon.Interfaces.Items;
 
 namespace MarekDamikDungeon
 {
@@ -25,6 +26,7 @@ namespace MarekDamikDungeon
 
         private List<IItem> _inv;
         private int _invMax;
+        private static Random BonusRandom = new Random();
 
         public int RoomId{ get => _roomId; set => _roomId = value; }
         public string Name{ get => _name; set => _name = value; }
@@ -39,6 +41,7 @@ namespace MarekDamikDungeon
         public Player()
         {
             Inv = new List<IItem>();
+            _invMax = 10;
             Random rn = new Random();
             RoomId = 1;
             _name = "" + rn.Next(500);
@@ -69,9 +72,28 @@ namespace MarekDamikDungeon
             if(Inv.Count < _invMax)
             {
                 Inv.Add(item);
+                ApplyItemBonus(item);
                 return true;
             }
             return false;
+        }
+
+        private void ApplyItemBonus(IItem item)
+        {
+            if (item is HealthPotion || item.Name.ToLower() == "healthpotion")
+            {
+                int bonus = BonusRandom.Next(3, 9);
+                MaxHealth += bonus;
+                Health += bonus;
+            }
+            else if (item is RustySword || item.Name.ToLower() == "rustysword")
+            {
+                Attack += BonusRandom.Next(1, 5);
+            }
+            else if (item is Armor || item.Name.ToLower() == "armor")
+            {
+                Defense += BonusRandom.Next(1, 5);
+            }
         }
 
         public string GetDescOfItem(string name)

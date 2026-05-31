@@ -11,13 +11,10 @@ namespace MarekDamikDungeon
      */
     internal class Logger
     {
-        private StreamWriter streamWriter;
-
         public Logger()
         {
-            streamWriter = new StreamWriter("./Log.txt");
-            streamWriter.AutoFlush = true;
         }
+
         public void Log(string message)
         {
             Console.WriteLine(message);
@@ -27,7 +24,7 @@ namespace MarekDamikDungeon
 
         public void Write(string message)
         {
-            streamWriter.WriteLine(message);
+            File.AppendAllText("./Log.txt", message + Environment.NewLine);
         }
 
     }
