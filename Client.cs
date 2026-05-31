@@ -56,12 +56,24 @@ public class Client
      */
     public bool CommandFromClient(string[] args, Map map)
     {
+        if (args.Length == 0 || string.IsNullOrWhiteSpace(args[0]))
+        {
+            args = new[] { "err" };
+        }
+
         if (!commands.ContainsKey(args[0]))
             args[0] = "err";
+
         Result = "Something went wrong";
-        if (args.Length == 0) commands["err"].Execute(map);
-        if (args.Length > 1) commands[args[0]].Execute(args[1], map, this);
-        commands[args[0]].Execute(map);
+        if (args.Length > 1)
+        {
+            string commandArgument = string.Join(" ", args.Skip(1));
+            commands[args[0]].Execute(commandArgument, map, this);
+        }
+        else
+        {
+            commands[args[0]].Execute(map);
+        }
         Result = konzole.Vypis($"{commands[args[0]].Info()}", map, Id);
         log.Log(commands[args[0]].Log(gameExec.Mapa.GetPlayer(Id)));
         return commands[args[0]].Exit();
