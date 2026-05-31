@@ -20,13 +20,7 @@ namespace MarekDamikDungeon
         public Map()
         {
             hracCount = 0;
-            //soubor je v bin/Debug/net8.0/Resources/MapTest.txt
-            if (Initialize("Resources/MapTest.txt")) Console.WriteLine("Map loaded properly");
-            foreach (Room r in rooms)
-            {
-                r.Items.Add(new ExampleItem());
-                r.Enemes.Add(new ExampleEnemy());
-            }
+            if (Initialize("MapTest.txt")) Console.WriteLine("Map loaded properly");
         }
 
         // potrebujeme vytahnout jednotlivy mistnosti z souboru
@@ -35,20 +29,25 @@ namespace MarekDamikDungeon
         {
             rooms = new List<Room>();
             players = new Dictionary<int, Player>();
-            //rooms.Add(new Room(data, 0));    // zatim přidání pouze placeholder místnosti
+            string mapPath = FindResourcePath(data);
 
-            string line;
             try
             {
-                StreamReader sr = new StreamReader(data);
-                line = sr.ReadLine();
+                using StreamReader sr = new StreamReader(mapPath);
+                string? line = sr.ReadLine();
 
                 while (line != null)
                 {
                     //file ve formatu:
-                    //id;name;idKamMuze1-idKamMuze2-idKamMuze3;popisMistnosti;
+                    //id;name;idKamMuze1-idKamMuze2-idKamMuze3;popisMistnosti;item1,item2;enemy1,enemy2;
 
                     string[] lines = line.Split(";");
+                    if (lines.Length < 4)
+                    {
+                        line = sr.ReadLine();
+                        continue;
+                    }
+
                     int id = int.Parse(lines[0]);
                     string name = lines[1];
                     List<int> connectedRooms = new List<int>();
@@ -60,15 +59,143 @@ namespace MarekDamikDungeon
                     }
                     string description = lines[3];
                     Room room = new Room(id, name, connectedRooms, description);
+                    LoadItemsToRoom(room, lines.Length > 4 ? lines[4] : "");
+                    LoadEnemiesToRoom(room, lines.Length > 5 ? lines[5] : "");
                     Rooms.Add(room);
                     line = sr.ReadLine();
                 }
-                sr.Close();
                 return true;
             }
             catch (Exception e)
             {
+                Console.WriteLine("Map loading failed: " + e.Message);
                 return false;
+            }
+        }
+
+        private string FindResourcePath(string fileName)
+        {
+            string? projectResourcePath = FindProjectResourcePath(fileName);
+            if (projectResourcePath != null)
+            {
+                return projectResourcePath;
+            }
+
+            string[] pathsToTry =
+            {
+                Path.Combine("Resources", fileName),
+                Path.Combine(Directory.GetCurrentDirectory(), "Resources", fileName),
+                Path.Combine(AppContext.BaseDirectory, "Resources", fileName),
+            };
+
+            foreach (string path in pathsToTry)
+            {
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+            }
+
+            DirectoryInfo? directory = new DirectoryInfo(AppContext.BaseDirectory);
+            while (directory != null)
+            {
+                string path = Path.Combine(directory.FullName, "Resources", fileName);
+                if (File.Exists(path))
+                {
+                    return path;
+                }
+                directory = directory.Parent;
+            }
+
+            return Path.Combine("Resources", fileName);
+        }
+
+        private string? FindProjectResourcePath(string fileName)
+        {
+            List<string> startingPaths = new List<string>
+            {
+                Directory.GetCurrentDirectory(),
+                AppContext.BaseDirectory
+            };
+
+            foreach (string startingPath in startingPaths)
+            {
+                DirectoryInfo? directory = new DirectoryInfo(startingPath);
+                while (directory != null)
+                {
+                    if (File.Exists(Path.Combine(directory.FullName, "MarekDamikDungeon.csproj")))
+                    {
+                        string path = Path.Combine(directory.FullName, "Resources", fileName);
+                        if (File.Exists(path))
+                        {
+                            return path;
+                        }
+                    }
+                    directory = directory.Parent;
+                }
+            }
+
+            return null;
+        }
+
+        private void LoadItemsToRoom(Room room, string data)
+        {
+            foreach (string itemName in SplitResourceList(data))
+            {
+                IItem? item = CreateItem(itemName);
+                if (item != null)
+                {
+                    room.Items.Add(item);
+                }
+            }
+        }
+
+        private void LoadEnemiesToRoom(Room room, string data)
+        {
+            foreach (string enemyName in SplitResourceList(data))
+            {
+                IEnemy? enemy = CreateEnemy(enemyName);
+                if (enemy != null)
+                {
+                    room.Enemes.Add(enemy);
+                }
+            }
+        }
+
+        private List<string> SplitResourceList(string data)
+        {
+            return data.Split(",", StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).ToList();
+        }
+
+        private IItem? CreateItem(string name)
+        {
+            switch (name.ToLower())
+            {
+                case "healthpotion":
+                case "health potion":
+                    return new HealthPotion();
+                case "rustysword":
+                case "rusty sword":
+                    return new RustySword();
+                case "armor":
+                    return new Armor();
+                default:
+                    return null;
+            }
+        }
+
+        private IEnemy? CreateEnemy(string name)
+        {
+            switch (name.ToLower())
+            {
+                case "orc":
+                    return new Orc();
+                case "skeleton":
+                    return new Skeleton();
+                case "slime":
+                    return new Slime();
+                default:
+                    return null;
             }
         }
         
@@ -106,7 +233,11 @@ namespace MarekDamikDungeon
                 {
                     if (GetPlayer(idHrace).Defense > enemy.Defense)
                     {
-                        enemy.ChangeHelth(GetPlayer(idHrace).Attack);
+                        bool enemyStillAlive = enemy.ChangeHelth(GetPlayer(idHrace).Attack);
+                        if (!enemyStillAlive)
+                        {
+                            Rooms[players[idHrace].RoomId].Enemes.Remove(enemy);
+                        }
                         return true;
                     }
                     else
@@ -134,9 +265,9 @@ namespace MarekDamikDungeon
                 status[0] += "Tour attack: " + GetPlayer(idHrace).Attack+ "\n";
                 int idInv = 1;
 
-                status[3] = "Items in your inventory: ";
+                status[1] = "Items in your inventory: ";
                 if(GetPlayer(idHrace).Inv.Count == 0) 
-                    status[3] += "no items in your inventory";
+                    status[1] += "no items in your inventory";
                 foreach(IItem item in GetPlayer(idHrace).Inv)
                 {
                     status[1] += idInv + " " + item.Name + "\n";
@@ -194,9 +325,16 @@ namespace MarekDamikDungeon
 
         public IItem ExtractItem(string name, int room)
         {
-            // tady potrebuju vratit item podle id mistnosti a jmena
-            // pokud mistnost item s danym jmenem neobsahuje vrat null
-            return new ExampleItem();
+            for (int i = 0; i < Rooms[room].Items.Count; i++)
+            {
+                if (Rooms[room].Items[i].Name.ToLower() == name.ToLower())
+                {
+                    IItem item = Rooms[room].Items[i];
+                    Rooms[room].Items.RemoveAt(i);
+                    return item;
+                }
+            }
+            return null;
         }
 
         public string EnemeNames(int room)

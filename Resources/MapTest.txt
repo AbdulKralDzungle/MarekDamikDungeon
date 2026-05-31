@@ -1,0 +1,7 @@
+0;Cell;1;A cold prison cell with rusty bars and damp stone walls;armor;slime
+1;Hallway;0-2-3;A narrow torchlit hallway with old scratches in the floor;rustysword;orc
+2;Stairs;1-4;Broken stairs leading deeper under the dungeon;healthpotion;skeleton
+3;Armory;1-5;A dusty armory with cracked weapon racks and scattered armor pieces;armor;orc
+4;Crypt;2-6;A silent crypt full of old bones and cracked stone coffins;healthpotion;skeleton
+5;GuardRoom;3-6;A guard room with a broken table and signs of a recent fight;rustysword;orc
+6;TreasureVault;4-5;A locked-down vault glittering with forgotten treasure;healthpotion;skeleton
