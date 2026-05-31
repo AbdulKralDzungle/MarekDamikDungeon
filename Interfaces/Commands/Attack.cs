@@ -18,8 +18,8 @@ internal class Attack : IGameCommand
 
     public string Info()
     {
-        if (!trefa) return "you hit your target";
-        return "you failed your attack and you have bin damaged";
+        if (trefa) return "you attacked your target";
+        return "you could not find that target";
     }
 
     public string Log(Player player)
